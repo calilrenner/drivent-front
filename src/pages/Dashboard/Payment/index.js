@@ -1,3 +1,5 @@
+import PaymentSection from "../../../components/Dashboard/Payment";
+
 export default function Payment() {
-  return "Pagamento: Em breve!";
+  return <PaymentSection />;
 }
