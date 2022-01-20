@@ -11,6 +11,7 @@ import {
   Center,
   BlockedText,
 } from "../../../components/DefaultTabStyle";
+import TicketSelection from "./TicketSelection";
 
 export default function Payment() {
   const [hasSubscription, setHasSubscription] = useState("");
@@ -38,29 +39,11 @@ export default function Payment() {
       <PageTitle>Ingresso e pagamento</PageTitle>
       {hasSubscription ?
         <>
-          <PageSubtitle visible={true}>Primeiro, escolha sua modalidade de ingresso</PageSubtitle>
-          <Options visible={true}>
-            <Option
-              selected={ticket === "presential" ? true : false}
-              onClick={() => {
-                ticket === "presential" ? setTicket(null) : setTicket("presential");
-                setHasHotel(null);
-              }}
-            >
-              <Type>Presencial</Type>
-              <Price>R$ 250</Price>
-            </Option>
-            <Option
-              selected={ticket === "online" ? true : false}
-              onClick={() => {
-                ticket === "online" ? setTicket(null) : setTicket("online");
-                setHasHotel(null);
-              }}
-            >
-              <Type>Online</Type>
-              <Price>R$ 100</Price>
-            </Option>
-          </Options>
+          <TicketSelection
+            ticket={ticket}
+            setTicket={setTicket}
+            setHasHotel={setHasHotel}
+          />
           <PageSubtitle visible={ticket === "presential" ? true : false}>Ótimo! Agora escolha sua modalidade de hospedagem</PageSubtitle>
           <Options visible={ticket === "presential" ? true : false}>
             <Option
