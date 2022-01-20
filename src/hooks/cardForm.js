@@ -26,7 +26,6 @@ export const cardForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(errors);
     setErrors(creditCardValidator(values));
   };
 

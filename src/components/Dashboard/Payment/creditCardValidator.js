@@ -10,46 +10,48 @@ export default function creditCardValidator(values) {
   creditCart.number = valid.number(values.number);
 
   errors.show = true;
-  errors.message = "Um erro desconhecido ocorreu. Tente mais tarde.";
+  errors.message = {
+    default: "Um erro desconhecido ocorreu. Tente mais tarde.",
+  };
   errors.name = false;
   errors.number = false;
   errors.expirationDate = false;
   errors.cvc = false;
 
   if (values.cvc === null || !values.cvc.trim()) {
-    errors.message = "O código está incompleto";
+    errors.message.cvc = "O código está incompleto";
   } else if (creditCart.cvc.isValid) {
     errors.cvc = true;
   } else {
-    errors.message = "O código está errado";
+    errors.message.cvc = "O código está errado";
   }
 
   if (values.expirationDate === null || !values.expirationDate.trim()) {
-    errors.message = "A validade está incompleta";
+    errors.message.expirationDate = "A validade está incompleta";
   } else if (creditCart.expirationDate.isValid) {
     errors.expirationDate = true;
   } else {
-    errors.message = "A validade está errada";
+    errors.message.expirationDate = "A validade está errada";
   }
 
   if (values.name === null || !values.name.trim()) {
-    errors.message = "O nome está incompleto";
+    errors.message.name = "O nome está incompleto";
   } else if (creditCart.name.isValid) {
     errors.name = true;
   } else {
-    errors.message = "O nome está errado";
+    errors.message.name = "O nome está errado";
   }
 
   if (values.number === null || !values.number.trim()) {
-    errors.message = "O número está incompleto";
+    errors.message.number = "O número está incompleto";
   } else if (creditCart.number.isValid) {
     errors.number = true;
   } else {
-    errors.message = "O número está errado";
+    errors.message.number = "O número está errado";
   }
 
   if (errors.name && errors.number && errors.cvc && errors.expirationDate) {
-    errors.message = "Sucesso!";
+    errors.message.default = "Sucesso!";
   }
 
   return errors;

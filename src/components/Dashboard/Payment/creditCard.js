@@ -2,15 +2,31 @@ import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import styled from "styled-components";
 import { cardForm } from "../../../hooks/cardForm";
+import useApi from "../../../hooks/useApi";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 import Confirm from "../../Form/Confirm";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { ErrorMsg } from "../../PersonalInformationForm/ErrorMsg";
 
 export default function PaymentInfo() {
   const { handleFocus, handleChange, handleSubmit, values, errors } =
     cardForm();
+  const api = useApi();
 
-  const notify = () => toast(errors.message);
+  const userId = useLocalStorage("userData");
+
+  const ticket = {
+    userId: userId[0].user.id,
+    modality: "Presencial",
+    acommodation: "Com hotel",
+  };
+
+  function handleSubmitResponse(e) {
+    handleSubmit(e);
+
+    if (errors.message?.default === "Sucesso!") {
+      api.payment.confirmPayment(ticket);
+    }
+  }
 
   return (
     <>
@@ -38,9 +54,10 @@ export default function PaymentInfo() {
             onChange={handleChange}
             onFocus={handleFocus}
           />
-          <span>E.g.: 49...51...36...27...</span>
-
-          <span>{errors.message}</span>
+          {!errors.message?.number && <span>E.g.: 49...51...36...27...</span>}
+          {errors.message?.number && (
+            <ErrorMsg>{errors.message.number}</ErrorMsg>
+          )}
           <Input
             name="name"
             type="text"
@@ -49,23 +66,27 @@ export default function PaymentInfo() {
             onChange={handleChange}
             onFocus={handleFocus}
           />
+          {errors.message?.name && <ErrorMsg>{errors.message.name}</ErrorMsg>}
           <div>
             <input
               name="expirationDate"
               type="text"
-              placeholder="Valid Thru"
               value={values.expirationDate}
               onChange={handleChange}
               onFocus={handleFocus}
             />
+
+            {errors.message?.expirationDate && (
+              <ErrorMsg>{errors.message.expirationDate}</ErrorMsg>
+            )}
             <input
               name="cvc"
               type="number"
-              placeholder="CVC"
               value={values.cvc}
               onChange={handleChange}
               onFocus={handleFocus}
             />
+            {errors.message?.cvc && <ErrorMsg>{errors.message.cvc}</ErrorMsg>}
           </div>
         </Form>
       </CardContainer>
@@ -73,10 +94,7 @@ export default function PaymentInfo() {
         msg="FINALIZAR PAGAMENTO"
         position="absolute"
         bottom="10rem"
-        onClick={(e) => {
-          handleSubmit(e);
-          notify();
-        }}
+        onClick={(e) => handleSubmitResponse(e)}
       />
     </>
   );
