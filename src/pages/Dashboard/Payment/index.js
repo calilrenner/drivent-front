@@ -16,6 +16,7 @@ export default function Payment() {
   const [hasSubscription, setHasSubscription] = useState("");
   const [loading, setLoading] = useState(false);
   const [ticket, setTicket] = useState(null);
+  const [hasHotel, setHasHotel] = useState(null);
   const { enrollment } = useApi();
 
   useEffect(() => { 
@@ -37,21 +38,44 @@ export default function Payment() {
       <PageTitle>Ingresso e pagamento</PageTitle>
       {hasSubscription ?
         <>
-          <PageSubtitle>Primeiro, escolha sua modalidade de ingresso</PageSubtitle>
-          <Options>
+          <PageSubtitle visible={true}>Primeiro, escolha sua modalidade de ingresso</PageSubtitle>
+          <Options visible={true}>
             <Option
               selected={ticket === "presential" ? true : false}
-              onClick={() => ticket === "presential" ? setTicket(null) : setTicket("presential")}
+              onClick={() => {
+                ticket === "presential" ? setTicket(null) : setTicket("presential");
+                setHasHotel(null);
+              }}
             >
               <Type>Presencial</Type>
-              <Price>R$250</Price>
+              <Price>R$ 250</Price>
             </Option>
             <Option
               selected={ticket === "online" ? true : false}
-              onClick={() => ticket === "online" ? setTicket(null) : setTicket("online")}
+              onClick={() => {
+                ticket === "online" ? setTicket(null) : setTicket("online");
+                setHasHotel(null);
+              }}
             >
               <Type>Online</Type>
-              <Price>R$100</Price>
+              <Price>R$ 100</Price>
+            </Option>
+          </Options>
+          <PageSubtitle visible={ticket === "presential" ? true : false}>Ótimo! Agora escolha sua modalidade de hospedagem</PageSubtitle>
+          <Options visible={ticket === "presential" ? true : false}>
+            <Option
+              selected={hasHotel === "no" ? true : false}
+              onClick={() => hasHotel === "no" ? setHasHotel(null) : setHasHotel("no")}
+            >
+              <Type>Sem Hotel</Type>
+              <Price>+ R$ 0</Price>
+            </Option>
+            <Option
+              selected={hasHotel === "yes" ? true : false}
+              onClick={() => hasHotel === "yes" ? setHasHotel(null) : setHasHotel("yes")}
+            >
+              <Type>Com Hotel</Type>
+              <Price>+ R$ 350</Price>
             </Option>
           </Options>
         </> :

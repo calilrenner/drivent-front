@@ -10,14 +10,16 @@ const PageSubtitle = styled.h2`
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
   color: #8E8E8E;
+  display: ${props => props.visible ? "inblock" : "none"};
   margin-bottom: 15px;
 `;
 
 const Options = styled.div`
   width: fit-content;
-  display: grid;
+  display: ${props => props.visible ? "grid" : "none"};
   grid-template-columns: repeat(2, 1fr);
   column-gap: 25px;
+  margin-bottom: 45px;
 `;
 
 const Option = styled.div`
