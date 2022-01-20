@@ -2,7 +2,16 @@ import HotelCard from "../../../components/HotelCard";
 export default function Hotel() {
   return (
     mockedHotelsData.map((hotel) => {
-      return (<HotelCard key={hotel.name}/>);
+      return (
+        <HotelCard 
+          key={hotel.name}
+          name={hotel.name}
+          imageUrl={hotel.imageUrl}
+          accommodationTypes={hotel.accommodationTypes}
+          vacancies={hotel.vacancies}
+          rooms={hotel.rooms}
+        />
+      );
     })
   );
 }
