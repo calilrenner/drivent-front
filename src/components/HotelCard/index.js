@@ -21,6 +21,7 @@ const CardStyle = styled.div`
   background-color: #F1F1F1;
   border-radius: 10px;
   padding: 14px;
+  margin: 8px;
 
   display: flex;
   flex-direction: column;
