@@ -25,7 +25,7 @@ export default function TicketSelection({ ticket, setTicket, setHasHotel }) {
           selected={ticket === "online" ? true : false}
           onClick={() => {
             ticket === "online" ? setTicket(null) : setTicket("online");
-            setHasHotel(null);
+            setHasHotel("no");
           }}
         >
           <Type>Online</Type>

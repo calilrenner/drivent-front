@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
 import useApi from "../../../hooks/useApi";
 import Loading from "../../../components/Loading";
-import { PageTitle, PageSubtitle, Center, BlockedText } from "../../../components/DefaultTabStyle";
-import TicketSelection from "./TicketSelection";
-import HotelSelection from "./HotelSelection";
-import Button from "../../../components/Form/Button";
-import styled from "styled-components";
+import { PageTitle, Center, BlockedText } from "../../../components/DefaultTabStyle";
+import ModalitySelection from "./ModalitySelection";
+import PaymentSelection from "./PaymentSelection";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 export default function Payment() {
   const [hasSubscription, setHasSubscription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [ticket, setTicket] = useState(null);
-  const [hasHotel, setHasHotel] = useState(null);
-  const [total, setTotal] = useState("0");
+  const [modalityInfo, setModalityInfo] = useLocalStorage("modalityInfo", {});
+  const [paymentVisibility, setPaymentVisibility] = useState(false);
+
   const { enrollment } = useApi();
 
   useEffect(() => { 
@@ -29,48 +28,24 @@ export default function Payment() {
       });
   }, [hasSubscription]);
 
-  useEffect(() => {
-    const ticketValue = ticket === "presential" ? 250 : 100;
-    const hotelValue = hasHotel === "yes" ? 350 : 0;
-
-    setTotal(ticketValue + hotelValue);
-  }, [hasHotel, ticket]);
-
-  const controlVisibility = () => { 
-    if (ticket === "online") {
-      return true;
-    }
-    if (ticket === "presential" && hasHotel) {
-      return true;
-    }
-    return false;
-  };
-
   return (
     <>
       <PageTitle>Ingresso e pagamento</PageTitle>
       {hasSubscription ?
         <>
-          <TicketSelection
-            ticket={ticket}
-            setTicket={setTicket}
-            setHasHotel={setHasHotel}
+          <ModalitySelection
+            setModalityInfo={setModalityInfo}
+            setPaymentVisibility={setPaymentVisibility}
           />
-          <HotelSelection
-            ticket={ticket}
-            hasHotel={hasHotel}
-            setHasHotel={setHasHotel}
+          <PaymentSelection
+            modalityInfo={modalityInfo}
+            paymentVisibility={paymentVisibility}
           />
-          <PageSubtitle visible={controlVisibility()}>Fechado! O total ficou em R$ {total}. Agora é só confirmar:</PageSubtitle>
-          <ToPaymentButton visible={controlVisibility()}>RESERVAR INGRESSO</ToPaymentButton>
-        </> :
+        </>
+        :
         <Center>
           {loading ? <Loading /> : <BlockedText>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</BlockedText>}
         </Center>}
     </>
   );
 }
-
-const ToPaymentButton = styled(Button)`
-  display: ${props => props.visible ? "inblock" : "none !important"};
-`;

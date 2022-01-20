@@ -12,6 +12,10 @@ const PageSubtitle = styled.h2`
   color: #8E8E8E;
   display: ${props => props.visible ? "inblock" : "none"};
   margin-bottom: 15px;
+
+  & span {
+    font-weight: 700;
+  }
 `;
 
 const Options = styled.div`
