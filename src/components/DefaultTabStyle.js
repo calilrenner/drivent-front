@@ -10,14 +10,20 @@ const PageSubtitle = styled.h2`
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
   color: #8E8E8E;
+  display: ${props => props.visible ? "inblock" : "none"};
   margin-bottom: 15px;
+
+  & span {
+    font-weight: 700;
+  }
 `;
 
 const Options = styled.div`
   width: fit-content;
-  display: grid;
+  display: ${props => props.visible ? "grid" : "none"};
   grid-template-columns: repeat(2, 1fr);
   column-gap: 25px;
+  margin-bottom: 45px;
 `;
 
 const Option = styled.div`
@@ -25,15 +31,16 @@ const Option = styled.div`
   width: fit-content;
   min-height: 145px;
   height: fit-content;
-  border: 1px solid #CECECE;
+  border: ${props => props.selected ? "none" : "1px solid #CECECE"};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: ${props => props.selected ? "#FFEED2" : "transparent"};
   
   &:hover {
-    filter: brightness(0.);
+    filter: brightness(0.95);
     cursor: pointer;
   }
 `;
