@@ -25,15 +25,16 @@ const Option = styled.div`
   width: fit-content;
   min-height: 145px;
   height: fit-content;
-  border: 1px solid #CECECE;
+  border: ${props => props.selected ? "none" : "1px solid #CECECE"};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: ${props => props.selected ? "#FFEED2" : "transparent"};
   
   &:hover {
-    filter: brightness(0.);
+    filter: brightness(0.95);
     cursor: pointer;
   }
 `;

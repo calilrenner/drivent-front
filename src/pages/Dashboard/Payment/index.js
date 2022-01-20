@@ -15,6 +15,7 @@ import {
 export default function Payment() {
   const [hasSubscription, setHasSubscription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ticket, setTicket] = useState(null);
   const { enrollment } = useApi();
 
   useEffect(() => { 
@@ -38,11 +39,17 @@ export default function Payment() {
         <>
           <PageSubtitle>Primeiro, escolha sua modalidade de ingresso</PageSubtitle>
           <Options>
-            <Option>
+            <Option
+              selected={ticket === "presential" ? true : false}
+              onClick={() => ticket === "presential" ? setTicket(null) : setTicket("presential")}
+            >
               <Type>Presencial</Type>
               <Price>R$250</Price>
             </Option>
-            <Option>
+            <Option
+              selected={ticket === "online" ? true : false}
+              onClick={() => ticket === "online" ? setTicket(null) : setTicket("online")}
+            >
               <Type>Online</Type>
               <Price>R$100</Price>
             </Option>
