@@ -4,6 +4,8 @@ import Loading from "../../../components/Loading";
 import { PageTitle, PageSubtitle, Center, BlockedText } from "../../../components/DefaultTabStyle";
 import TicketSelection from "./TicketSelection";
 import HotelSelection from "./HotelSelection";
+import Button from "../../../components/Form/Button";
+import styled from "styled-components";
 
 export default function Payment() {
   const [hasSubscription, setHasSubscription] = useState("");
@@ -60,6 +62,7 @@ export default function Payment() {
             setHasHotel={setHasHotel}
           />
           <PageSubtitle visible={controlVisibility()}>Fechado! O total ficou em R$ {total}. Agora é só confirmar:</PageSubtitle>
+          <ToPaymentButton visible={controlVisibility()}>RESERVAR INGRESSO</ToPaymentButton>
         </> :
         <Center>
           {loading ? <Loading /> : <BlockedText>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</BlockedText>}
@@ -67,3 +70,7 @@ export default function Payment() {
     </>
   );
 }
+
+const ToPaymentButton = styled(Button)`
+  display: ${props => props.visible ? "inblock" : "none !important"};
+`;
