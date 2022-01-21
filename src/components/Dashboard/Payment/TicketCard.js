@@ -1,8 +1,11 @@
+import { useContext } from "react";
 import styled from "styled-components";
+import UserContext from "../../../contexts/UserContext";
 import { Price, Type } from "../../DefaultTabStyle";
 
 export default function TicketCard({ modalityInfo }) {
   const { value, modality, acommodation } = modalityInfo;
+  const { userTicket } = useContext(UserContext);
 
   const ticketInfos = {
     modality: modality === "presential" ? "Presencial" : "Online",
@@ -12,9 +15,14 @@ export default function TicketCard({ modalityInfo }) {
   return (
     <TicketContainer>
       <Type>
-        {ticketInfos.modality} + {ticketInfos.acommodation}
+        {userTicket[0]?.modality.type || ticketInfos.modality} +{" "}
+        {userTicket[0]?.acommodation.type || ticketInfos.acommodation}
       </Type>
-      <Price>R$ {value}</Price>
+      <Price>
+        R${" "}
+        {userTicket[0]?.modality.value + userTicket[0]?.acommodation.value ||
+          value}
+      </Price>
     </TicketContainer>
   );
 }

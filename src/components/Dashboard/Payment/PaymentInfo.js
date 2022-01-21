@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import styled, { css } from "styled-components/macro";
@@ -9,6 +9,7 @@ import { PageSubtitle, Type } from "../../DefaultTabStyle";
 import Button from "../../Form/Button";
 import TicketCard from "./TicketCard";
 import { AiFillCheckCircle } from "react-icons/ai";
+import UserContext from "../../../contexts/UserContext";
 
 export default function PaymentInfo({ modalityInfo }) {
   const { handleFocus, handleChange, handleSubmit, values, errors } =
@@ -19,10 +20,15 @@ export default function PaymentInfo({ modalityInfo }) {
   const [update, setUpdate] = useState(false);
   const [errorMsg, setErrorMsg] = useState(errors.message?.default);
   const [hideCreditCard, setHideCreditCard] = useState(false);
+  const { userTicket } = useContext(UserContext);
+  const [disableCard, setDisableCard] = useState(false);
 
   useEffect(() => {
     setErrorMsg(errors.message?.default);
-  }, [update, errors]);
+    if (errorMsg === "Sucesso!") {
+      setDisableCard(true);
+    }
+  }, [update, errors, errorMsg]);
 
   const ticket = {
     userId: userId[0].user.id,
@@ -32,10 +38,10 @@ export default function PaymentInfo({ modalityInfo }) {
 
   function handleSubmitResponse(e) {
     handleSubmit(e);
-    setUpdate(!update);
+    setUpdate(false);
 
     if (errorMsg === "Sucesso!") {
-      setUpdate(!update);
+      setUpdate(true);
       setHideCreditCard(true);
       api.payment.confirmPayment(ticket);
     }
@@ -44,9 +50,12 @@ export default function PaymentInfo({ modalityInfo }) {
   return (
     <>
       <PageSubtitle visible={true}>Ingresso escolhido</PageSubtitle>
-      <TicketCard modalityInfo={modalityInfo}/>
+      <TicketCard modalityInfo={modalityInfo} />
       <PageSubtitle visible={true}>Pagamento</PageSubtitle>
-      <CardContainer hideCreditCard={hideCreditCard}>
+      <CardContainer
+        hideCreditCard={hideCreditCard}
+        userTicket={userTicket.length > 0 ? true : false}
+      >
         <Cards
           cvc={values.cvc}
           expiry={values.expirationDate}
@@ -62,6 +71,7 @@ export default function PaymentInfo({ modalityInfo }) {
             value={values.number}
             onChange={handleChange}
             onFocus={handleFocus}
+            disabled={disableCard}
           />
           <span>E.g.: 49...51...36...27...</span>
           <Input
@@ -71,6 +81,7 @@ export default function PaymentInfo({ modalityInfo }) {
             value={values.name}
             onChange={handleChange}
             onFocus={handleFocus}
+            disabled={disableCard}
           />
           <div>
             <input
@@ -79,6 +90,7 @@ export default function PaymentInfo({ modalityInfo }) {
               value={values.expirationDate}
               onChange={handleChange}
               onFocus={handleFocus}
+              disabled={disableCard}
             />
             <input
               name="cvc"
@@ -86,29 +98,40 @@ export default function PaymentInfo({ modalityInfo }) {
               value={values.cvc}
               onChange={handleChange}
               onFocus={handleFocus}
+              disabled={disableCard}
             />
           </div>
         </Form>
         <ErrorFlag show={errors.show}>
           <ul>
-            {errors.message && Object.keys(errors.message).map((msg, idx) => {
-              if(idx > 0) {
-                return <li key={idx}>- {errors.message[msg]}</li>;
-              } else {
-                return "";
-              }
-            })}
+            {errors.message &&
+              Object.keys(errors.message).map((msg, idx) => {
+                if (idx > 0) {
+                  return <li key={idx}>- {errors.message[msg]}</li>;
+                } else {
+                  return "";
+                }
+              })}
           </ul>
         </ErrorFlag>
         <Button
-          children={errorMsg === "Sucesso!" ? <span>FINALIZAR PAGAMENTO</span> : <span>VALIDAR</span>}
+          children={
+            errorMsg === "Sucesso!" ? (
+              <span>FINALIZAR PAGAMENTO</span>
+            ) : (
+              <span>VALIDAR</span>
+            )
+          }
           position="absolute"
           top="10rem"
           right="38rem"
           onClick={(e) => handleSubmitResponse(e)}
         />
       </CardContainer>
-      <PaymentCheckContainer hideCreditCard={hideCreditCard}>
+      <PaymentCheckContainer
+        hideCreditCard={hideCreditCard}
+        userTicket={userTicket.length > 0 ? true : false}
+      >
         <Check />
         <div>
           <span>Pagamento confirmado!</span>
@@ -120,12 +143,13 @@ export default function PaymentInfo({ modalityInfo }) {
 }
 
 const Check = styled(AiFillCheckCircle)`
-  color: #36B853;
+  color: #36b853;
   font-size: 3rem;
 `;
 
 const PaymentCheckContainer = styled.div`
-  display: ${({ hideCreditCard }) => hideCreditCard ? "flex" : "none"};
+  display: ${({ hideCreditCard, userTicket }) =>
+    hideCreditCard || userTicket ? "flex" : "none"};
 
   div {
     display: flex;
@@ -140,7 +164,8 @@ const PaymentCheckContainer = styled.div`
 `;
 
 const CardContainer = styled.div`
-  display: ${({ hideCreditCard }) => hideCreditCard ? "none" : "flex"};
+  display: ${({ hideCreditCard, userTicket }) =>
+    hideCreditCard || userTicket ? "none" : "flex"};
   align-items: center;
   position: absolute;
 `;
@@ -151,7 +176,7 @@ const InputStyle = css`
   outline: none;
   padding-left: 1rem;
   font-size: 18px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
 
   &::placeholder {
     font-size: 18px;
@@ -199,7 +224,7 @@ const ErrorFlag = styled.div`
   margin-left: 1rem;
   border-radius: 10px;
   padding: 1rem 0 0;
-  display: ${({ show }) => show ? "flex" : "none"};
+  display: ${({ show }) => (show ? "flex" : "none")};
   justify-content: center;
 
   li {
