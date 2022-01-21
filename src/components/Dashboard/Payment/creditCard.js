@@ -1,42 +1,54 @@
+import { useEffect, useState } from "react";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
-import styled from "styled-components";
+import styled, { css } from "styled-components/macro";
 import { cardForm } from "../../../hooks/cardForm";
 import useApi from "../../../hooks/useApi";
 import useLocalStorage from "../../../hooks/useLocalStorage";
-import Confirm from "../../Form/Confirm";
-import { ErrorMsg } from "../../PersonalInformationForm/ErrorMsg";
+import { PageSubtitle, Price, Type } from "../../DefaultTabStyle";
+import Button from "../../Form/Button";
 
-export default function PaymentInfo() {
+export default function PaymentInfo({ modalityInfo }) {
   const { handleFocus, handleChange, handleSubmit, values, errors } =
     cardForm();
   const api = useApi();
-
+  const { value, modality, acommodation } = modalityInfo;
   const userId = useLocalStorage("userData");
+  // const [confirmMsg, setConfirmMsg] = useState("VALIDAR");
+  const [update, setUpdate] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(errors.message?.default);
+
+  useEffect(() => {
+    setErrorMsg(errors.message?.default);
+  }, [update, errors]);
 
   const ticket = {
     userId: userId[0].user.id,
-    modality: "Presencial",
-    acommodation: "Com hotel",
+    modality: modality === "presential" ? "Presencial" : "Online",
+    acommodation: acommodation === "yes" ? "Com hotel" : "Sem hotel",
   };
 
   function handleSubmitResponse(e) {
     handleSubmit(e);
+    setUpdate(!update);
+    console.log(errorMsg);
 
-    if (errors.message?.default === "Sucesso!") {
+    if (errorMsg === "Sucesso!") {
+      setUpdate(!update);
       api.payment.confirmPayment(ticket);
     }
   }
 
   return (
     <>
-      <Title>Ingresso e pagamento</Title>
-      <SubTitle>Ingresso escolhido</SubTitle>
+      <PageSubtitle>Ingresso escolhido</PageSubtitle>
       <TicketContainer>
-        <span>Presencial + Com Hotel</span>
-        <span>R$ 600</span>
+        <Type>
+          {ticket.modality} + {ticket.acommodation}
+        </Type>
+        <Price>R$ {value}</Price>
       </TicketContainer>
-      <SubTitle>Pagamento</SubTitle>
+      <PageSubtitle>Pagamento</PageSubtitle>
       <CardContainer>
         <Cards
           cvc={values.cvc}
@@ -54,10 +66,7 @@ export default function PaymentInfo() {
             onChange={handleChange}
             onFocus={handleFocus}
           />
-          {!errors.message?.number && <span>E.g.: 49...51...36...27...</span>}
-          {errors.message?.number && (
-            <ErrorMsg>{errors.message.number}</ErrorMsg>
-          )}
+          <span>E.g.: 49...51...36...27...</span>
           <Input
             name="name"
             type="text"
@@ -66,7 +75,6 @@ export default function PaymentInfo() {
             onChange={handleChange}
             onFocus={handleFocus}
           />
-          {errors.message?.name && <ErrorMsg>{errors.message.name}</ErrorMsg>}
           <div>
             <input
               name="expirationDate"
@@ -75,10 +83,6 @@ export default function PaymentInfo() {
               onChange={handleChange}
               onFocus={handleFocus}
             />
-
-            {errors.message?.expirationDate && (
-              <ErrorMsg>{errors.message.expirationDate}</ErrorMsg>
-            )}
             <input
               name="cvc"
               type="number"
@@ -86,30 +90,29 @@ export default function PaymentInfo() {
               onChange={handleChange}
               onFocus={handleFocus}
             />
-            {errors.message?.cvc && <ErrorMsg>{errors.message.cvc}</ErrorMsg>}
           </div>
         </Form>
+        <ErrorFlag show={errors.show}>
+          <ul>
+            {errors.message && Object.keys(errors.message).map((msg, idx) => {
+              if(idx > 0) {
+                return <li key={idx}>- {errors.message[msg]}</li>;
+              } else {
+                return "";
+              }
+            })}
+          </ul>
+        </ErrorFlag>
       </CardContainer>
-      <Confirm
-        msg="FINALIZAR PAGAMENTO"
+      <Button
+        children={errorMsg === "Sucesso!" ? <span>FINALIZAR PAGAMENTO</span> : <span>VALIDAR</span>}
         position="absolute"
-        bottom="10rem"
+        top="15rem"
         onClick={(e) => handleSubmitResponse(e)}
       />
     </>
   );
 }
-
-const Title = styled.h1`
-  font-size: 34px;
-  margin-bottom: 3rem;
-`;
-
-const SubTitle = styled.h2`
-  font-size: 20px;
-  color: #8e8e8e;
-  margin-bottom: 1.5rem;
-`;
 
 const TicketContainer = styled.div`
   height: 7rem;
@@ -121,16 +124,29 @@ const TicketContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
-
-  span:first-child {
-    margin-bottom: 1rem;
-  }
 `;
 
 const CardContainer = styled.div`
   display: flex;
   align-items: center;
   position: absolute;
+`;
+
+const InputStyle = css`
+  height: 3rem;
+  border-radius: 4px;
+  outline: none;
+  padding-left: 1rem;
+  font-size: 18px;
+  border: 1px solid #E0E0E0;
+
+  &::placeholder {
+    font-size: 18px;
+  }
+
+  &:hover {
+    border: 1px solid #8e8e8e;
+  }
 `;
 
 const Form = styled.form`
@@ -140,22 +156,9 @@ const Form = styled.form`
 
   div {
     input {
-      height: 3rem;
+      ${InputStyle}
       width: 11rem;
-      border-radius: 4px;
-      border: 1.5px solid #e0e0e0;
-      outline: none;
-      padding-left: 1rem;
       margin-top: 0.7rem;
-      font-size: 18px;
-
-      &::placeholder {
-        font-size: 18px;
-      }
-
-      &:hover {
-        border: 1px solid #8e8e8e;
-      }
     }
 
     input:last-child {
@@ -172,19 +175,22 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  height: 3rem;
+  ${InputStyle}
   width: 18rem;
-  border-radius: 4px;
-  border: 1.5px solid #e0e0e0;
-  outline: none;
-  padding-left: 1rem;
-  font-size: 18px;
+`;
 
-  &::placeholder {
-    font-size: 18px;
-  }
+const ErrorFlag = styled.div`
+  width: 15rem;
+  height: 100%;
+  background-color: #ffeed2;
+  margin-left: 1rem;
+  border-radius: 10px;
+  padding: 1rem 0 0;
+  display: ${({ show }) => show ? "flex" : "none"};
+  justify-content: center;
 
-  &:hover {
-    border: 1px solid #8e8e8e;
+  li {
+    margin-bottom: 1rem;
+    color: red;
   }
 `;
