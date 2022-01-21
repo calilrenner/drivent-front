@@ -14,4 +14,5 @@ const StyledMuiButton = styled(MuiButton)`
   display: ${props => props.visible ? "" : "none"};
   position: ${({ position }) => position ? position : ""};
   top: ${({ top }) => top ? top : ""};
+  right: ${({ right }) => right ? right : ""};
 `;

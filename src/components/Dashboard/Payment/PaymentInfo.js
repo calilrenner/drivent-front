@@ -5,18 +5,22 @@ import styled, { css } from "styled-components/macro";
 import { cardForm } from "../../../hooks/cardForm";
 import useApi from "../../../hooks/useApi";
 import useLocalStorage from "../../../hooks/useLocalStorage";
-import { PageSubtitle, Price, Type } from "../../DefaultTabStyle";
+import { PageSubtitle, Type } from "../../DefaultTabStyle";
 import Button from "../../Form/Button";
+import TicketCard from "./TicketCard";
+import { AiFillCheckCircle } from "react-icons/ai";
 
 export default function PaymentInfo({ modalityInfo }) {
   const { handleFocus, handleChange, handleSubmit, values, errors } =
     cardForm();
   const api = useApi();
-  const { value, modality, acommodation } = modalityInfo;
+  const { modality, acommodation } = modalityInfo;
   const userId = useLocalStorage("userData");
-  // const [confirmMsg, setConfirmMsg] = useState("VALIDAR");
   const [update, setUpdate] = useState(false);
   const [errorMsg, setErrorMsg] = useState(errors.message?.default);
+  const [hideCreditCard, setHideCreditCard] = useState(useLocalStorage("modalityInfo")[0] ? true : false);
+
+  const storage = useLocalStorage("modalityInfo")[0];
 
   useEffect(() => {
     setErrorMsg(errors.message?.default);
@@ -31,7 +35,6 @@ export default function PaymentInfo({ modalityInfo }) {
   function handleSubmitResponse(e) {
     handleSubmit(e);
     setUpdate(!update);
-    console.log(errorMsg);
 
     if (errorMsg === "Sucesso!") {
       setUpdate(!update);
@@ -41,14 +44,9 @@ export default function PaymentInfo({ modalityInfo }) {
 
   return (
     <>
-      <PageSubtitle>Ingresso escolhido</PageSubtitle>
-      <TicketContainer>
-        <Type>
-          {ticket.modality} + {ticket.acommodation}
-        </Type>
-        <Price>R$ {value}</Price>
-      </TicketContainer>
-      <PageSubtitle>Pagamento</PageSubtitle>
+      <PageSubtitle visible={true}>Ingresso escolhido</PageSubtitle>
+      <TicketCard modalityInfo={modalityInfo}/>
+      <PageSubtitle visible={true}>Pagamento</PageSubtitle>
       <CardContainer>
         <Cards
           cvc={values.cvc}
@@ -103,31 +101,47 @@ export default function PaymentInfo({ modalityInfo }) {
             })}
           </ul>
         </ErrorFlag>
+        <Button
+          children={errorMsg === "Sucesso!" ? <span>FINALIZAR PAGAMENTO</span> : <span>VALIDAR</span>}
+          position="absolute"
+          top="10rem"
+          right="54rem"
+          onClick={(e) => handleSubmitResponse(e)}
+        />
       </CardContainer>
-      <Button
-        children={errorMsg === "Sucesso!" ? <span>FINALIZAR PAGAMENTO</span> : <span>VALIDAR</span>}
-        position="absolute"
-        top="15rem"
-        onClick={(e) => handleSubmitResponse(e)}
-      />
+      <PaymentCheckContainer>
+        <Check />
+        <div>
+          <span>Pagamento confirmado!</span>
+          <Type>Prossiga para escolha de hospedagem e atividades</Type>
+        </div>
+      </PaymentCheckContainer>
     </>
   );
 }
 
-const TicketContainer = styled.div`
-  height: 7rem;
-  width: 18rem;
-  background-color: #ffeed2;
-  border-radius: 20px;
+const Check = styled(AiFillCheckCircle)`
+  color: #36B853;
+  font-size: 3rem;
+`;
+
+const PaymentCheckContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 2rem;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 0.5rem;
+
+    span:first-child {
+      margin-bottom: 0.2rem;
+    }
+  }
 `;
 
 const CardContainer = styled.div`
-  display: flex;
+  display: none;
   align-items: center;
   position: absolute;
 `;

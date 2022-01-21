@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import PaymentInfo from "../../../components/Dashboard/Payment/creditCard";
+import PaymentInfo from "../../../components/Dashboard/Payment/PaymentInfo";
 
 export default function PaymentSelection({ modalityInfo, paymentVisibility }) {
   return (
     <PaymentContainer visible={paymentVisibility}>
       <PaymentInfo
         modalityInfo={modalityInfo}
-        paymentVisibility={paymentVisibility}
       />
     </PaymentContainer>
   );
