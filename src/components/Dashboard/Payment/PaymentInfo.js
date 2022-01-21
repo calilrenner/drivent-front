@@ -18,9 +18,7 @@ export default function PaymentInfo({ modalityInfo }) {
   const userId = useLocalStorage("userData");
   const [update, setUpdate] = useState(false);
   const [errorMsg, setErrorMsg] = useState(errors.message?.default);
-  const [hideCreditCard, setHideCreditCard] = useState(useLocalStorage("modalityInfo")[0] ? true : false);
-
-  const storage = useLocalStorage("modalityInfo")[0];
+  const [hideCreditCard, setHideCreditCard] = useState(false);
 
   useEffect(() => {
     setErrorMsg(errors.message?.default);
@@ -38,6 +36,7 @@ export default function PaymentInfo({ modalityInfo }) {
 
     if (errorMsg === "Sucesso!") {
       setUpdate(!update);
+      setHideCreditCard(true);
       api.payment.confirmPayment(ticket);
     }
   }
@@ -47,7 +46,7 @@ export default function PaymentInfo({ modalityInfo }) {
       <PageSubtitle visible={true}>Ingresso escolhido</PageSubtitle>
       <TicketCard modalityInfo={modalityInfo}/>
       <PageSubtitle visible={true}>Pagamento</PageSubtitle>
-      <CardContainer>
+      <CardContainer hideCreditCard={hideCreditCard}>
         <Cards
           cvc={values.cvc}
           expiry={values.expirationDate}
@@ -105,11 +104,11 @@ export default function PaymentInfo({ modalityInfo }) {
           children={errorMsg === "Sucesso!" ? <span>FINALIZAR PAGAMENTO</span> : <span>VALIDAR</span>}
           position="absolute"
           top="10rem"
-          right="54rem"
+          right="38rem"
           onClick={(e) => handleSubmitResponse(e)}
         />
       </CardContainer>
-      <PaymentCheckContainer>
+      <PaymentCheckContainer hideCreditCard={hideCreditCard}>
         <Check />
         <div>
           <span>Pagamento confirmado!</span>
@@ -126,7 +125,7 @@ const Check = styled(AiFillCheckCircle)`
 `;
 
 const PaymentCheckContainer = styled.div`
-  display: flex;
+  display: ${({ hideCreditCard }) => hideCreditCard ? "flex" : "none"};
 
   div {
     display: flex;
@@ -141,7 +140,7 @@ const PaymentCheckContainer = styled.div`
 `;
 
 const CardContainer = styled.div`
-  display: none;
+  display: ${({ hideCreditCard }) => hideCreditCard ? "none" : "flex"};
   align-items: center;
   position: absolute;
 `;
