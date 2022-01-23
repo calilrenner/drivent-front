@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import useApi from "../../../hooks/useApi";
 import Loading from "../../../components/Loading";
-import { PageTitle, Center, BlockedText } from "../../../components/DefaultTabStyle";
+import {
+  PageTitle,
+  Center,
+  BlockedText,
+} from "../../../components/DefaultTabStyle";
 import ModalitySelection from "./ModalitySelection";
 import PaymentSelection from "./PaymentSelection";
 import useLocalStorage from "../../../hooks/useLocalStorage";
@@ -14,24 +18,23 @@ export default function Payment() {
 
   const { enrollment } = useApi();
 
-  useEffect(() => { 
+  useEffect(() => {
     setLoading(true);
-    enrollment.getPersonalInformations()
-      .then((response) => {
-        if (response.status === 200) {
-          setHasSubscription(true);
-          setLoading(false);
-        } else {
-          setHasSubscription(false);
-          setLoading(false);
-        }
-      });
+    enrollment.getPersonalInformations().then((response) => {
+      if (response.status === 200) {
+        setHasSubscription(true);
+        setLoading(false);
+      } else {
+        setHasSubscription(false);
+        setLoading(false);
+      }
+    });
   }, [hasSubscription]);
 
   return (
     <>
       <PageTitle>Ingresso e pagamento</PageTitle>
-      {hasSubscription ?
+      {hasSubscription ? (
         <>
           <ModalitySelection
             setModalityInfo={setModalityInfo}
@@ -42,10 +45,18 @@ export default function Payment() {
             paymentVisibility={paymentVisibility}
           />
         </>
-        :
+      ) : (
         <Center>
-          {loading ? <Loading /> : <BlockedText>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</BlockedText>}
-        </Center>}
+          {loading ? (
+            <Loading />
+          ) : (
+            <BlockedText>
+              Você precisa completar sua inscrição antes de prosseguir pra
+              escolha de ingresso
+            </BlockedText>
+          )}
+        </Center>
+      )}
     </>
   );
 }
