@@ -13,6 +13,7 @@ import Loading from "../../../components/Loading";
 export default function Hotel() {
   const [loading, setLoading] = useState(false);
   const [hotelsData, setHotelsData] = useState([]);
+  const [selectedHotel, setSelectedHotel] = useState({ id: 0 });
 
   const { hotels } = useApi();
   useEffect(() => { 
@@ -28,7 +29,7 @@ export default function Hotel() {
         }
       });
   }, []);
-
+  
   return (
     <>
       <PageTitle>Escolha de hotel e quarto</PageTitle>
@@ -44,11 +45,14 @@ export default function Hotel() {
                 return (
                   <HotelCard 
                     key={hotel.name}
+                    id={hotel.id}
                     name={hotel.name}
                     imageUrl={hotel.imageUrl}
-                    accommodationTypes={hotel.accommodationTypes}
+                    accommodationType={hotel.accommodationType}
                     vacancies={hotel.vacancies}
                     rooms={hotel.rooms}
+                    selectedHotel={selectedHotel}
+                    setSelectedHotel={setSelectedHotel}
                   />
                 );
               })

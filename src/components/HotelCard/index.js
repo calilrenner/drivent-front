@@ -1,13 +1,21 @@
+import { useState } from "react";
 import styled from "styled-components";
 
-export default function HotelCard({ name, imageUrl, accommodationTypes, vacancies, rooms }) {
+export default function HotelCard({ id, name, imageUrl, accommodationType, vacancies, rooms, selectedHotel, setSelectedHotel }) {
+  function selectHotel() {
+    const hotelData = {
+      id, name, vacancies, rooms
+    };
+    setSelectedHotel(hotelData);
+  }
+
   return ( 
-    <CardStyle>
+    <CardStyle onClick={selectHotel} isSelected={selectedHotel.id === id}>
       <img src={imageUrl}/>
       <TextContainerStyle>
         <CardTitleStyle>{name}</CardTitleStyle>
         <CardSubtitleStyle>Tipos de acomodação:</CardSubtitleStyle>
-        <CardTextStyle>{accommodationTypes}</CardTextStyle>
+        <CardTextStyle>{accommodationType}</CardTextStyle>
         <CardSubtitleStyle>Vagas disponíveis</CardSubtitleStyle>
         <CardTextStyle>{vacancies}</CardTextStyle>
       </TextContainerStyle>
@@ -18,7 +26,7 @@ export default function HotelCard({ name, imageUrl, accommodationTypes, vacancie
 const CardStyle = styled.div`
   width: 196px;
   height: 264px;
-  background-color: #F1F1F1;
+  background-color: ${(props) => props.isSelected ? "#FFEED2" : "#F1F1F1"};
   border-radius: 10px;
   padding: 14px;
   margin: 8px;
@@ -29,6 +37,8 @@ const CardStyle = styled.div`
 
   font-family: 'Roboto', sans-serif;
 
+  transition: ease-in-out 0.3s;
+
   img{
     width: 168px;
     height: 109px;
@@ -37,7 +47,8 @@ const CardStyle = styled.div`
 
   :hover{
     cursor: pointer;
-    filter: brightness(0.9);
+    filter: brightness(1.05) saturate(1.6);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   }
 `;
 
