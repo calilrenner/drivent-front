@@ -1,15 +1,30 @@
+import { useContext, useEffect, useState } from "react";
 import {
   PageSubtitle,
   Options,
   Option,
   Type,
   Price,
+  PageContainer,
 } from "../../../components/DefaultTabStyle";
+import UserContext from "../../../contexts/UserContext";
+import useApi from "../../../hooks/useApi";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 export default function TicketSelection({ ticket, setTicket, setHasHotel }) {
+  const api = useApi();
+  const userId = useLocalStorage("userData")[0].user.id;
+  const { userTicket, setUserTicket } = useContext(UserContext);
+
+  useEffect(() => {
+    api.payment.findPayment(userId).then((res) => setUserTicket(res.data));
+  }, []);
+
   return (
-    <>
-      <PageSubtitle visible={true}>Primeiro, escolha sua modalidade de ingresso</PageSubtitle>
+    <PageContainer visible={userTicket.length > 0 ? true : false}>
+      <PageSubtitle visible={true}>
+        Primeiro, escolha sua modalidade de ingresso
+      </PageSubtitle>
       <Options visible={true}>
         <Option
           selected={ticket === "presential" ? true : false}
@@ -32,6 +47,6 @@ export default function TicketSelection({ ticket, setTicket, setHasHotel }) {
           <Price>R$ 100</Price>
         </Option>
       </Options>
-    </>
+    </PageContainer>
   );
 }

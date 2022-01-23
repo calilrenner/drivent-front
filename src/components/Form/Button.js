@@ -12,4 +12,7 @@ export default function Button({ variant="contained", children, ...props }) {
 const StyledMuiButton = styled(MuiButton)`
   margin-top: 8px !important;
   display: ${props => props.visible ? "" : "none"};
+  position: ${({ position }) => position ? position : ""};
+  top: ${({ top }) => top ? top : ""};
+  right: ${({ right }) => right ? right : ""};
 `;
