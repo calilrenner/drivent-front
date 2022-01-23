@@ -8,6 +8,8 @@ import {
 
 import HotelCard from "../../../components/HotelCard";
 import useApi from "../../../hooks/useApi";
+import Loading from "../../../components/Loading";
+
 export default function Hotel() {
   const [loading, setLoading] = useState(false);
   const [hotelsData, setHotelsData] = useState([]);
@@ -25,28 +27,34 @@ export default function Hotel() {
           setLoading(false);
         }
       });
-  }, [hotelsData]);
+  }, []);
 
   return (
     <>
       <PageTitle>Escolha de hotel e quarto</PageTitle>
       <PageSubtitle>Primeiro, escolha seu hotel</PageSubtitle>
-      <HotelsContainerStyle>
-        {
-          hotelsData.map((hotel) => {
-            return (
-              <HotelCard 
-                key={hotel.name}
-                name={hotel.name}
-                imageUrl={hotel.imageUrl}
-                accommodationTypes={hotel.accommodationTypes}
-                vacancies={hotel.vacancies}
-                rooms={hotel.rooms}
-              />
-            );
-          })
-        }
-      </HotelsContainerStyle>
+      {
+        loading
+          ?
+          <Loading/>
+          :
+          <HotelsContainerStyle>
+            {
+              hotelsData.map((hotel) => {
+                return (
+                  <HotelCard 
+                    key={hotel.name}
+                    name={hotel.name}
+                    imageUrl={hotel.imageUrl}
+                    accommodationTypes={hotel.accommodationTypes}
+                    vacancies={hotel.vacancies}
+                    rooms={hotel.rooms}
+                  />
+                );
+              })
+            }
+          </HotelsContainerStyle> 
+      }
     </>
   );
 }
