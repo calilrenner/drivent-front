@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
 import useApi from "../../../hooks/useApi";
 import Loading from "../../../components/Loading";
-import {
-  PageTitle,
-  PageSubtitle,
-  Options,
-  Option,
-  Type,
-  Price,
-  Center,
-  BlockedText,
-} from "../../../components/DefaultTabStyle";
+import { PageTitle, Center, BlockedText } from "../../../components/DefaultTabStyle";
+import ModalitySelection from "./ModalitySelection";
+import PaymentSelection from "./PaymentSelection";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 export default function Payment() {
   const [hasSubscription, setHasSubscription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [modalityInfo, setModalityInfo] = useLocalStorage("modalityInfo", {});
+  const [paymentVisibility, setPaymentVisibility] = useState(false);
+
   const { enrollment } = useApi();
 
   useEffect(() => { 
@@ -36,18 +33,16 @@ export default function Payment() {
       <PageTitle>Ingresso e pagamento</PageTitle>
       {hasSubscription ?
         <>
-          <PageSubtitle>Primeiro, escolha sua modalidade de ingresso</PageSubtitle>
-          <Options>
-            <Option>
-              <Type>Presencial</Type>
-              <Price>R$250</Price>
-            </Option>
-            <Option>
-              <Type>Online</Type>
-              <Price>R$100</Price>
-            </Option>
-          </Options>
-        </> :
+          <ModalitySelection
+            setModalityInfo={setModalityInfo}
+            setPaymentVisibility={setPaymentVisibility}
+          />
+          <PaymentSelection
+            modalityInfo={modalityInfo}
+            paymentVisibility={paymentVisibility}
+          />
+        </>
+        :
         <Center>
           {loading ? <Loading /> : <BlockedText>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</BlockedText>}
         </Center>}
