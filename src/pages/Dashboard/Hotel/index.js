@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import {
   PageTitle,
@@ -5,14 +7,33 @@ import {
 } from "../../../components/DefaultTabStyle";
 
 import HotelCard from "../../../components/HotelCard";
+import useApi from "../../../hooks/useApi";
 export default function Hotel() {
+  const [loading, setLoading] = useState(false);
+  const [hotelsData, setHotelsData] = useState([]);
+
+  const { hotels } = useApi();
+  useEffect(() => { 
+    setLoading(true);
+    hotels.getHotels()
+      .then((response) => {
+        if (response.status === 200) {
+          setHotelsData(response.data);
+          setLoading(false);
+        } else {
+          console.error(response.status);
+          setLoading(false);
+        }
+      });
+  }, [hotelsData]);
+
   return (
     <>
       <PageTitle>Escolha de hotel e quarto</PageTitle>
       <PageSubtitle>Primeiro, escolha seu hotel</PageSubtitle>
       <HotelsContainerStyle>
         {
-          mockedHotelsData.map((hotel) => {
+          hotelsData.map((hotel) => {
             return (
               <HotelCard 
                 key={hotel.name}
@@ -45,120 +66,3 @@ const HotelsContainerStyle = styled.section`
     border-radius: 20px;
   }  
 `;
-
-const mockedHotelsData = [
-  {
-    id: 1,
-    name: "Driven Resort",
-    imageUrl: "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg",
-    accommodationTypes: "Single e Double",
-    vacancies: 15,
-    rooms: [
-      {
-        id: 1,
-        hotelId: 1,
-        number: 101,
-        vacancies: [
-          {
-            id: 1,
-            roomId: 1,
-            isAvailable: true
-          },
-          {
-            id: 2,
-            roomId: 1,
-            isAvailable: false
-          }
-        ]
-      },
-      {
-        id: 2,
-        hotelId: 1,
-        number: 102,
-        vacancies: [
-          {
-            id: 3,
-            roomId: 1,
-            isAvailable: true
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 1,
-    name: "Driven Resort",
-    imageUrl: "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg",
-    accommodationTypes: "Single e Double",
-    vacancies: 15,
-    rooms: [
-      {
-        id: 1,
-        hotelId: 1,
-        number: 101,
-        vacancies: [
-          {
-            id: 1,
-            roomId: 1,
-            isAvailable: true
-          },
-          {
-            id: 2,
-            roomId: 1,
-            isAvailable: false
-          }
-        ]
-      },
-      {
-        id: 2,
-        hotelId: 1,
-        number: 102,
-        vacancies: [
-          {
-            id: 3,
-            roomId: 1,
-            isAvailable: true
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 1,
-    name: "Driven Resort",
-    imageUrl: "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg",
-    accommodationTypes: "Single e Double",
-    vacancies: 15,
-    rooms: [
-      {
-        id: 1,
-        hotelId: 1,
-        number: 101,
-        vacancies: [
-          {
-            id: 1,
-            roomId: 1,
-            isAvailable: true
-          },
-          {
-            id: 2,
-            roomId: 1,
-            isAvailable: false
-          }
-        ]
-      },
-      {
-        id: 2,
-        hotelId: 1,
-        number: 102,
-        vacancies: [
-          {
-            id: 3,
-            roomId: 1,
-            isAvailable: true
-          }
-        ]
-      }
-    ]
-  }
-];

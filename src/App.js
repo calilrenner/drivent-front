@@ -82,3 +82,4 @@ function ensureEventIsFinished() {
     { to: "/", check: () => dayjs().isAfter(dayjs(eventInfo.endDate)), message: "Os certificados não foram liberados ainda!" }
   ];
 }
+
