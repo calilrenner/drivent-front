@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 export default function HotelCard({ id, name, imageUrl, accommodationType, vacancies, rooms, selectedHotel, setSelectedHotel }) {
@@ -11,7 +10,7 @@ export default function HotelCard({ id, name, imageUrl, accommodationType, vacan
 
   return ( 
     <CardStyle onClick={selectHotel} isSelected={selectedHotel.id === id}>
-      <img src={imageUrl}/>
+      <img src={imageUrl} alt={name}/>
       <TextContainerStyle>
         <CardTitleStyle>{name}</CardTitleStyle>
         <CardSubtitleStyle>Tipos de acomodação:</CardSubtitleStyle>
