@@ -23,7 +23,7 @@ export default function Hotel() {
   const [loading, setLoading] = useState(false);
   const [hotelsData, setHotelsData] = useState([]);
   const [selectedHotel, setSelectedHotel] = useState({ id: 0 });
-  const [hasPayment, setHasPayment] = useState(true);
+  const [hasPayment, setHasPayment] = useState(false);
   const [hasAccommodation, setHasAccommodation] = useState(false);
   const [alreadySelectedHotel, setAlreadySelectedHotel] = useState({});
   const [oldReservationInfo, setOldReservationInfo] = useState(false);
@@ -39,15 +39,14 @@ export default function Hotel() {
     payment.findPayment(userId)
       .then((response) => {
         if (response.status === 200) {
-          response.data[0].modality.id === 1 ? setHasAccommodation(true) : setHasAccommodation(false);
+          setHasPayment(true);
+          response.data[0].acommodation.id === 1 ? setHasAccommodation(true) : setHasAccommodation(false);
         }
       })
       .catch((error) => {
         console.error(error);
-        setHasPayment(false);
       });
   }
-
   function checkReservation(userId) {
     setLoading(true);
     hotels.findHotel(userId)
