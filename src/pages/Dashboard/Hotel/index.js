@@ -21,6 +21,7 @@ export default function Hotel() {
   const [hasPayment, setHasPayment] = useState(true);
   const [hasAccommodation, setHasAccommodation] = useState(false);
   const [alreadySelectedHotel, setAlreadySelectedHotel] = useState({});
+  const [oldReservationInfo, setOldReservationInfo] =useState({});
 
   const { hotels, payment } = useApi();
   const { userData } = useContext(UserContext);
@@ -46,6 +47,7 @@ export default function Hotel() {
       .then((response) => {
         if (response.status === 200) {
           setAlreadySelectedHotel(response.data);
+          setOldReservationInfo(response.data);
         }
       })
       .catch((error) => {
