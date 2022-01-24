@@ -32,13 +32,11 @@ export default function Hotel() {
       .then((response) => {
         if (response.status === 200) {
           response.data[0].modality.id === 1 ? setHasAccommodation(true) : setHasAccommodation(false);
-          setLoading(false);
         }
       })
       .catch((error) => {
         console.error(error);
         setHasPayment(false);
-        setLoading(false);
       });
   }
 
@@ -56,7 +54,6 @@ export default function Hotel() {
   }
 
   function loadHotels() {
-    setLoading(true);
     hotels.getHotels()
       .then((response) => {
         if (response.status === 200) {
