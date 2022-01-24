@@ -2,9 +2,20 @@ import styled from "styled-components";
 
 export default function HotelCard({ id, name, imageUrl, accommodationType, vacancies, rooms, selectedHotel, setSelectedHotel }) {
   function selectHotel() {
-    const hotelData = {
+    let hotelData = {
       id, name, vacancies, rooms
     };
+    hotelData.rooms.sort((a, b) => (a.number > b.number) ? 1 : -1);
+    hotelData.rooms.forEach(room => {
+      room.vacancies.sort((a, b) => (a.isAvailable > b.isAvailable) ? 1 : -1);
+
+      let ocupation = 0;
+      room.vacancies.forEach(vacancy => {
+        if(vacancy.isAvailable === false) ocupation++;
+      });
+      if(ocupation === room.vacancies.length) room.isFull = true;
+      else room.isFull = false;
+    });
     setSelectedHotel(hotelData);
   }
 
