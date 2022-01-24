@@ -8,10 +8,10 @@ export default function HotelCard({ alreadySelectedHotel, setAlreadySelectedHote
     accommodationType = "Single";
   }
   else if(alreadySelectedHotel.roomType === 2) {
-    accommodationType = "Single e Double";
+    accommodationType = "Double";
   }
   else {
-    accommodationType = "Single, Double e Triple";
+    accommodationType = "Triple";
   }
 
   function changeRoom() {
