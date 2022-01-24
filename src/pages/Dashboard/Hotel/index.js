@@ -9,6 +9,7 @@ import {
 } from "../../../components/DefaultTabStyle";
 
 import HotelCard from "../../../components/HotelCard";
+import SelectedHotelCard from "../../../components/SelectedHotelCard";
 import useApi from "../../../hooks/useApi";
 import Loading from "../../../components/Loading";
 import UserContext from "../../../contexts/UserContext";
@@ -19,25 +20,11 @@ export default function Hotel() {
   const [selectedHotel, setSelectedHotel] = useState({ id: 0 });
   const [hasPayment, setHasPayment] = useState(true);
   const [hasAccommodation, setHasAccommodation] = useState(false);
+  const [alreadySelectedHotel, setAlreadySelectedHotel] = useState({});
 
   const { hotels, payment } = useApi();
   const { userData } = useContext(UserContext);
   const userId = userData.user.id;
-
-  function loadHotels() {
-    setLoading(true);
-    hotels.getHotels()
-      .then((response) => {
-        if (response.status === 200) {
-          setHotelsData(response.data);
-          setLoading(false);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  }
 
   function checkPayment(userId) {
     setLoading(true);
@@ -55,8 +42,37 @@ export default function Hotel() {
       });
   }
 
+  function checkReservation(userId) {
+    setLoading(true);
+    hotels.findHotel(userId)
+      .then((response) => {
+        if (response.status === 200) {
+          setAlreadySelectedHotel(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  function loadHotels() {
+    setLoading(true);
+    hotels.getHotels()
+      .then((response) => {
+        if (response.status === 200) {
+          setHotelsData(response.data);
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }
+
   useEffect(() => {
     checkPayment(userId);
+    checkReservation(userId);
     loadHotels();
   }, []);
   
@@ -68,34 +84,41 @@ export default function Hotel() {
           ?
           hasAccommodation
             ?
-            <>
-              <PageSubtitle>Primeiro, escolha seu hotel</PageSubtitle>
-              {
-                loading
-                  ?
-                  <Loading/>
-                  :
-                  <HotelsContainerStyle>
-                    {
-                      hotelsData.map((hotel) => {
-                        return (
-                          <HotelCard 
-                            key={hotel.name}
-                            id={hotel.id}
-                            name={hotel.name}
-                            imageUrl={hotel.imageUrl}
-                            accommodationType={hotel.accommodationType}
-                            vacancies={hotel.vacancies}
-                            rooms={hotel.rooms}
-                            selectedHotel={selectedHotel}
-                            setSelectedHotel={setSelectedHotel}
-                          />
-                        );
-                      })
-                    }
-                  </HotelsContainerStyle> 
-              }
-            </> 
+            alreadySelectedHotel.hotelName 
+              ?
+              <>
+                <SubtitleStyle>Você já escolheu o seu quarto: </SubtitleStyle>
+                <SelectedHotelCard alreadySelectedHotel={alreadySelectedHotel} setAlreadySelectedHotel={setAlreadySelectedHotel}/>
+              </>
+              :
+              <>
+                <PageSubtitle>Primeiro, escolha seu hotel</PageSubtitle>
+                {
+                  loading
+                    ?
+                    <Loading/>
+                    :
+                    <HotelsContainerStyle>
+                      {
+                        hotelsData.map((hotel) => {
+                          return (
+                            <HotelCard 
+                              key={hotel.name}
+                              id={hotel.id}
+                              name={hotel.name}
+                              imageUrl={hotel.imageUrl}
+                              accommodationType={hotel.accommodationType}
+                              vacancies={hotel.vacancies}
+                              rooms={hotel.rooms}
+                              selectedHotel={selectedHotel}
+                              setSelectedHotel={setSelectedHotel}
+                            />
+                          );
+                        })
+                      }
+                    </HotelsContainerStyle> 
+                }
+              </> 
             :
             <Center>
               {loading ? <Loading /> : <BlockedText>Sua modalidade de ingresso não possui hospedagem. Prossiga para a escolha de atividades</BlockedText>}
@@ -123,4 +146,12 @@ const HotelsContainerStyle = styled.section`
     background-color: #CCCCCC;
     border-radius: 20px;
   }  
+`;
+
+const SubtitleStyle = styled.p`
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #8E8E8E;
+  margin-bottom: 14px;
 `;
