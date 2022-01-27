@@ -32,7 +32,7 @@ export default function Activities() {
   const [hasPayment, setHasPayment] = useState(false);
   const [isPresential, setIsPresential] = useState(false);
   const [activities, setActivities] = useState(false);
-
+  
   const { userData } = useContext(UserContext);
   const userId = userData.user.id;
   const { payment } = useApi();
@@ -58,7 +58,7 @@ export default function Activities() {
       if (d.id.toString() === event.currentTarget.id) {
         if(index === 0) setActivities(mockedActivitiesDay1);
         if(index === 1) setActivities(mockedActivitiesDay2);
-        if(index === 3) setActivities(mockedActivitiesDay3);
+        if(index === 2) setActivities(mockedActivitiesDay3);
         return { ...d, isSelected: true };
       } else {
         return { ...d, isSelected: false };

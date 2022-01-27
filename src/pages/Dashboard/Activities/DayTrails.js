@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { BiLogIn } from "react-icons/bi";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { Fade } from "@material-ui/core";
 
 export default function DayTrails({ dayTrails }) {
   return(
@@ -23,7 +22,6 @@ export default function DayTrails({ dayTrails }) {
 }
 
 function EventTrails({ id, trailName, events }) {
-  const animationIn = true;
   return (
     <TrailContainerStyle>
       <TitleStyle>
@@ -31,33 +29,30 @@ function EventTrails({ id, trailName, events }) {
       </TitleStyle>
       <EventContainerStyle>
         {
-          events.map((event, index) => {
-            const animationTiming = (index + 1) * 2000;
+          events.map((event) => {
             return (
-              <Fade in={animationIn} timeout={{ enter: animationTiming, exit: animationTiming }}>
-                <EventCardStyle duration={event.duration}>
-                  <EventDescrpiptionStyle>
-                    <EventTitleStyle>{event.name}</EventTitleStyle>
-                    <EventTimeStyle>{event.startTime} - {event.endTime}</EventTimeStyle>
-                  </EventDescrpiptionStyle>
-                  <SeparatorStyle/>
-                  <VacanciesStyle>
-                    { 
-                      event.vacancies > 0
-                        ?
-                        <VacanciesAvailabilityStyle color='#078632' isAvailable={true}>
-                          <AvailableIcon/>
-                          <div>{event.vacancies} vagas</div>
-                        </VacanciesAvailabilityStyle>
-                        :
-                        <VacanciesAvailabilityStyle color='#CC6666' isAvailable={false}>
-                          <UnavailableIcon/>
-                          <div>Esgotado</div>
-                        </VacanciesAvailabilityStyle>
-                    }
-                  </VacanciesStyle>
-                </EventCardStyle>
-              </Fade>
+              <EventCardStyle key={event.name} duration={event.duration}>
+                <EventDescrpiptionStyle>
+                  <EventTitleStyle>{event.name}</EventTitleStyle>
+                  <EventTimeStyle>{event.startTime} - {event.endTime}</EventTimeStyle>
+                </EventDescrpiptionStyle>
+                <SeparatorStyle/>
+                <VacanciesStyle>
+                  { 
+                    event.vacancies > 0
+                      ?
+                      <VacanciesAvailabilityStyle color='#078632' isAvailable={true}>
+                        <AvailableIcon/>
+                        <div>{event.vacancies} vagas</div>
+                      </VacanciesAvailabilityStyle>
+                      :
+                      <VacanciesAvailabilityStyle color='#CC6666' isAvailable={false}>
+                        <UnavailableIcon/>
+                        <div>Esgotado</div>
+                      </VacanciesAvailabilityStyle>
+                  }
+                </VacanciesStyle>
+              </EventCardStyle>
             );
           })
         }
