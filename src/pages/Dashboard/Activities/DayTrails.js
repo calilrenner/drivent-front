@@ -94,6 +94,16 @@ const EventContainerStyle = styled.div`
   height: 350px;
   padding: 14px;
   border: 1px solid #D7D7D7;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    border-radius: 20px;
+  }
 `;
 
 const EventCardStyle = styled.div`

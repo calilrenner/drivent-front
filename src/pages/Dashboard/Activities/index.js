@@ -31,7 +31,7 @@ export default function Activities() {
   const [loading, setLoading] = useState(false);
   const [hasPayment, setHasPayment] = useState(false);
   const [isPresential, setIsPresential] = useState(false);
-  const [isDayOneSelected, setIsDayOneSelected] = useState(false);
+  const [activities, setActivities] = useState(false);
 
   const { userData } = useContext(UserContext);
   const userId = userData.user.id;
@@ -56,8 +56,9 @@ export default function Activities() {
   const selectDay = (event) => {
     const newArray = weekdays.map((d, index) => {
       if (d.id.toString() === event.currentTarget.id) {
-        if(index === 0) setIsDayOneSelected(true);
-        else setIsDayOneSelected(false);
+        if(index === 0) setActivities(mockedActivitiesDay1);
+        if(index === 1) setActivities(mockedActivitiesDay2);
+        if(index === 3) setActivities(mockedActivitiesDay3);
         return { ...d, isSelected: true };
       } else {
         return { ...d, isSelected: false };
@@ -87,9 +88,9 @@ export default function Activities() {
               })}
             </Weekdays>
             {
-              isDayOneSelected 
+              activities !== false 
                 ? 
-                <DayTrails dayTrails={mockedActivitiesDay1}/>
+                <DayTrails dayTrails={activities}/>
                 : 
                 <div/>}
           </>
@@ -130,6 +131,146 @@ const Day = styled(Button)`
 `;
 
 const mockedActivitiesDay1 = [
+  {
+    id: 1,
+    trailName: "Auditório Principal",
+    events: [
+      {
+        id: 1,
+        name: "Palestra A",
+        startTime: "09:00",
+        endTime: "10:00",
+        duration: 1,
+        vacancies: 15
+      },
+      {
+        id: 2,
+        name: "Palestra B",
+        startTime: "10:00",
+        endTime: "11:00",
+        duration: 1,
+        vacancies: 0
+      },
+      {
+        id: 3,
+        name: "Palestra C",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+
+    ]
+  },
+  {
+    id: 2,
+    trailName: "Auditório Lateral",
+    events: [
+      {
+        id: 4,
+        name: "Palestra D",
+        startTime: "09:00",
+        endTime: "10:30",
+        duration: 1.5,
+        vacancies: 15
+      }
+    ]
+  },
+  {
+    id: 3,
+    trailName: "Workroom",
+    events: [
+      {
+        id: 5,
+        name: "Palestra E",
+        startTime: "09:00",
+        endTime: "11:00",
+        duration: 2,
+        vacancies: 15
+      },
+      {
+        id: 6,
+        name: "Palestra F",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+    ]
+  },
+];
+
+const mockedActivitiesDay2 = [
+  {
+    id: 1,
+    trailName: "Auditório Principal",
+    events: [
+      {
+        id: 1,
+        name: "Palestra A",
+        startTime: "09:00",
+        endTime: "10:00",
+        duration: 1.5,
+        vacancies: 15
+      },
+      {
+        id: 2,
+        name: "Palestra B",
+        startTime: "10:00",
+        endTime: "11:00",
+        duration: 2,
+        vacancies: 0
+      },
+      {
+        id: 3,
+        name: "Palestra C",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+
+    ]
+  },
+  {
+    id: 2,
+    trailName: "Auditório Lateral",
+    events: [
+      {
+        id: 4,
+        name: "Palestra D",
+        startTime: "09:00",
+        endTime: "10:30",
+        duration: 3,
+        vacancies: 15
+      }
+    ]
+  },
+  {
+    id: 3,
+    trailName: "Workroom",
+    events: [
+      {
+        id: 5,
+        name: "Palestra E",
+        startTime: "09:00",
+        endTime: "11:00",
+        duration: 1.5,
+        vacancies: 15
+      },
+      {
+        id: 6,
+        name: "Palestra F",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1.5,
+        vacancies: 15
+      }
+    ]
+  },
+];
+
+const mockedActivitiesDay3 = [
   {
     id: 1,
     trailName: "Auditório Principal",
