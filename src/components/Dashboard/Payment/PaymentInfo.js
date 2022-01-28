@@ -27,6 +27,7 @@ export default function PaymentInfo({ modalityInfo }) {
     setErrorMsg(errors.message?.default);
     if (errorMsg === "Sucesso!") {
       setDisableCard(true);
+      handleSubmitSuccess();
     }
   }, [update, errors, errorMsg]);
 
@@ -39,12 +40,12 @@ export default function PaymentInfo({ modalityInfo }) {
   function handleSubmitResponse(e) {
     handleSubmit(e);
     setUpdate(false);
+  }
 
-    if (errorMsg === "Sucesso!") {
-      setUpdate(true);
-      setHideCreditCard(true);
-      api.payment.confirmPayment(ticket);
-    }
+  function handleSubmitSuccess() {
+    setUpdate(true);
+    setHideCreditCard(true);
+    api.payment.confirmPayment(ticket);
   }
 
   return (
@@ -52,82 +53,78 @@ export default function PaymentInfo({ modalityInfo }) {
       <PageSubtitle visible={true}>Ingresso escolhido</PageSubtitle>
       <TicketCard modalityInfo={modalityInfo} />
       <PageSubtitle visible={true}>Pagamento</PageSubtitle>
-      <CardContainer
+      <OuterContainer
         hideCreditCard={hideCreditCard}
         userTicket={userTicket.length > 0 ? true : false}
       >
-        <Cards
-          cvc={values.cvc}
-          expiry={values.expirationDate}
-          focused={values.focus}
-          name={values.name}
-          number={values.number}
-        />
-        <Form>
-          <Input
-            name="number"
-            type="number"
-            placeholder="Card Number"
-            value={values.number}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            disabled={disableCard}
+        <CardContainer>
+          <Cards
+            cvc={values.cvc}
+            expiry={values.expirationDate}
+            focused={values.focus}
+            name={values.name}
+            number={values.number}
           />
-          <span>E.g.: 49...51...36...27...</span>
-          <Input
-            name="name"
-            type="text"
-            placeholder="Name"
-            value={values.name}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            disabled={disableCard}
-          />
-          <div>
-            <input
-              name="expirationDate"
-              type="text"
-              value={values.expirationDate}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              disabled={disableCard}
-            />
-            <input
-              name="cvc"
+          <Form>
+            <Input
+              name="number"
               type="number"
-              value={values.cvc}
+              placeholder="Card Number"
+              value={values.number}
               onChange={handleChange}
               onFocus={handleFocus}
               disabled={disableCard}
             />
-          </div>
-        </Form>
-        <ErrorFlag show={errors.show}>
-          <ul>
-            {errors.message &&
-              Object.keys(errors.message).map((msg, idx) => {
-                if (idx > 0) {
-                  return <li key={idx}>- {errors.message[msg]}</li>;
-                } else {
-                  return "";
-                }
-              })}
-          </ul>
-        </ErrorFlag>
+            <span>E.g.: 49...51...36...27...</span>
+            <Input
+              name="name"
+              type="text"
+              placeholder="Name"
+              value={values.name}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              disabled={disableCard}
+            />
+            <div>
+              <input
+                name="expirationDate"
+                type="text"
+                value={values.expirationDate}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                disabled={disableCard}
+              />
+              <input
+                name="cvc"
+                type="number"
+                value={values.cvc}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                disabled={disableCard}
+              />
+            </div>
+          </Form>
+          <ErrorFlag show={errors.show}>
+            <ul>
+              {errors.message &&
+                Object.keys(errors.message).map((msg, idx) => {
+                  if (idx > 0) {
+                    return <li key={idx}>- {errors.message[msg]}</li>;
+                  } else {
+                    return "";
+                  }
+                })}
+            </ul>
+          </ErrorFlag>
+        </CardContainer>
         <Button
-          children={
-            errorMsg === "Sucesso!" ? (
-              <span>FINALIZAR PAGAMENTO</span>
-            ) : (
-              <span>VALIDAR</span>
-            )
-          }
-          position="absolute"
-          top="10rem"
-          right="38rem"
+          children={<span>FINALIZAR PAGAMENTO</span>}
+          position="fixed"
+          top="13rem"
           onClick={(e) => handleSubmitResponse(e)}
         />
-      </CardContainer>
+      </OuterContainer>
+
       <PaymentCheckContainer
         hideCreditCard={hideCreditCard}
         userTicket={userTicket.length > 0 ? true : false}
@@ -164,10 +161,9 @@ const PaymentCheckContainer = styled.div`
 `;
 
 const CardContainer = styled.div`
-  display: ${({ hideCreditCard, userTicket }) =>
-    hideCreditCard || userTicket ? "none" : "flex"};
+  display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
 `;
 
 const InputStyle = css`
@@ -231,4 +227,9 @@ const ErrorFlag = styled.div`
     margin-bottom: 1rem;
     color: red;
   }
+`;
+
+const OuterContainer = styled.div`
+  display: ${({ hideCreditCard, userTicket }) =>
+    hideCreditCard || userTicket ? "none" : ""};
 `;
