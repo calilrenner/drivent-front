@@ -66,7 +66,6 @@ export default function Activities() {
     });
     setDays(newArray);
   };
-
   return (
     <>
       <PageTitle>Escolha de atividades</PageTitle>
