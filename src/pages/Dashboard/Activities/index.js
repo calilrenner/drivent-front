@@ -35,7 +35,7 @@ export default function Activities() {
   
   const { userData } = useContext(UserContext);
   const userId = userData.user.id;
-  const { payment } = useApi();
+  const { payment, event } = useApi();
 
   useEffect(() => {
     setLoading(true);
@@ -53,12 +53,17 @@ export default function Activities() {
       });
   }, [hasPayment, isPresential]);
 
-  const selectDay = (event) => {
+  const selectDay = (ev) => {
     const newArray = weekdays.map((d, index) => {
-      if (d.id.toString() === event.currentTarget.id) {
-        if(index === 0) setActivities(mockedActivitiesDay1);
-        if(index === 1) setActivities(mockedActivitiesDay2);
-        if(index === 2) setActivities(mockedActivitiesDay3);
+      if (d.id.toString() === ev.currentTarget.id) {
+        event.getEventsByDay(d.id)
+          .then((response) => {
+            console.log(response.data);
+            setActivities(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         return { ...d, isSelected: true };
       } else {
         return { ...d, isSelected: false };
