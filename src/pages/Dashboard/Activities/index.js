@@ -6,6 +6,7 @@ import Button from "../../../components/Form/Button";
 import useApi from "../../../hooks/useApi";
 import Loading from "../../../components/Loading";
 import UserContext from "../../../contexts/UserContext";
+import DayTrails from "./DayTrails";
 
 export default function Activities() {
   const weekdays = [
@@ -30,10 +31,11 @@ export default function Activities() {
   const [loading, setLoading] = useState(false);
   const [hasPayment, setHasPayment] = useState(false);
   const [isPresential, setIsPresential] = useState(false);
-
+  const [activities, setActivities] = useState(false);
+  
   const { userData } = useContext(UserContext);
   const userId = userData.user.id;
-  const { payment } = useApi();
+  const { payment, event } = useApi();
 
   useEffect(() => {
     setLoading(true);
@@ -51,9 +53,17 @@ export default function Activities() {
       });
   }, [hasPayment, isPresential]);
 
-  const selectDay = (event) => {
-    const newArray = weekdays.map((d) => {
-      if (d.id.toString() === event.currentTarget.id) {
+  const selectDay = (ev) => {
+    const newArray = weekdays.map((d, index) => {
+      if (d.id.toString() === ev.currentTarget.id) {
+        event.getEventsByDay(d.id)
+          .then((response) => {
+            console.log(response.data);
+            setActivities(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         return { ...d, isSelected: true };
       } else {
         return { ...d, isSelected: false };
@@ -61,7 +71,6 @@ export default function Activities() {
     });
     setDays(newArray);
   };
-  
   return (
     <>
       <PageTitle>Escolha de atividades</PageTitle>
@@ -82,6 +91,12 @@ export default function Activities() {
                 );
               })}
             </Weekdays>
+            {
+              activities !== false 
+                ? 
+                <DayTrails dayTrails={activities}/>
+                : 
+                <div/>}
           </>
           :
           <Center>
@@ -118,3 +133,213 @@ const Day = styled(Button)`
   text-transform: none !important;
   background-color: ${(props) => props.selected ? "#FFD37D !important" : ""}
 `;
+
+const mockedActivitiesDay1 = [
+  {
+    id: 1,
+    trailName: "Auditório Principal",
+    events: [
+      {
+        id: 1,
+        name: "Palestra A",
+        startTime: "09:00",
+        endTime: "10:00",
+        duration: 1,
+        vacancies: 15
+      },
+      {
+        id: 2,
+        name: "Palestra B",
+        startTime: "10:00",
+        endTime: "11:00",
+        duration: 1,
+        vacancies: 0
+      },
+      {
+        id: 3,
+        name: "Palestra C",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+
+    ]
+  },
+  {
+    id: 2,
+    trailName: "Auditório Lateral",
+    events: [
+      {
+        id: 4,
+        name: "Palestra D",
+        startTime: "09:00",
+        endTime: "10:30",
+        duration: 1.5,
+        vacancies: 15
+      }
+    ]
+  },
+  {
+    id: 3,
+    trailName: "Workroom",
+    events: [
+      {
+        id: 5,
+        name: "Palestra E",
+        startTime: "09:00",
+        endTime: "11:00",
+        duration: 2,
+        vacancies: 15
+      },
+      {
+        id: 6,
+        name: "Palestra F",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+    ]
+  },
+];
+
+const mockedActivitiesDay2 = [
+  {
+    id: 1,
+    trailName: "Auditório Principal",
+    events: [
+      {
+        id: 1,
+        name: "Palestra A",
+        startTime: "09:00",
+        endTime: "10:00",
+        duration: 1.5,
+        vacancies: 15
+      },
+      {
+        id: 2,
+        name: "Palestra B",
+        startTime: "10:00",
+        endTime: "11:00",
+        duration: 2,
+        vacancies: 0
+      },
+      {
+        id: 3,
+        name: "Palestra C",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+
+    ]
+  },
+  {
+    id: 2,
+    trailName: "Auditório Lateral",
+    events: [
+      {
+        id: 4,
+        name: "Palestra D",
+        startTime: "09:00",
+        endTime: "10:30",
+        duration: 3,
+        vacancies: 15
+      }
+    ]
+  },
+  {
+    id: 3,
+    trailName: "Workroom",
+    events: [
+      {
+        id: 5,
+        name: "Palestra E",
+        startTime: "09:00",
+        endTime: "11:00",
+        duration: 1.5,
+        vacancies: 15
+      },
+      {
+        id: 6,
+        name: "Palestra F",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1.5,
+        vacancies: 15
+      }
+    ]
+  },
+];
+
+const mockedActivitiesDay3 = [
+  {
+    id: 1,
+    trailName: "Auditório Principal",
+    events: [
+      {
+        id: 1,
+        name: "Palestra A",
+        startTime: "09:00",
+        endTime: "10:00",
+        duration: 1,
+        vacancies: 15
+      },
+      {
+        id: 2,
+        name: "Palestra B",
+        startTime: "10:00",
+        endTime: "11:00",
+        duration: 1,
+        vacancies: 0
+      },
+      {
+        id: 3,
+        name: "Palestra C",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+
+    ]
+  },
+  {
+    id: 2,
+    trailName: "Auditório Lateral",
+    events: [
+      {
+        id: 4,
+        name: "Palestra D",
+        startTime: "09:00",
+        endTime: "10:30",
+        duration: 1.5,
+        vacancies: 15
+      }
+    ]
+  },
+  {
+    id: 3,
+    trailName: "Workroom",
+    events: [
+      {
+        id: 5,
+        name: "Palestra E",
+        startTime: "09:00",
+        endTime: "11:00",
+        duration: 2,
+        vacancies: 15
+      },
+      {
+        id: 6,
+        name: "Palestra F",
+        startTime: "11:00",
+        endTime: "12:00",
+        duration: 1,
+        vacancies: 15
+      }
+    ]
+  },
+];
