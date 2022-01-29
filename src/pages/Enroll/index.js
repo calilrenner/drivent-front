@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
-import { useHistory } from "react-router-dom";
 
 import AuthLayout from "../../layouts/Auth";
 
@@ -19,8 +18,6 @@ export default function Enroll() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loadingEnroll, setLoadingEnroll] = useState(false);
-
-  const history = useHistory();
 
   const api = useApi();
   
