@@ -42,7 +42,6 @@ export default function Enroll() {
             // eslint-disable-next-line quotes
             if (detail === '"password" length must be at least 6 characters long') toast("A senha deve conter no mínimo 6 caracteres");
             else toast("Insira um formato de e-mail válido");
-            // toast(detail);
           }
         } else if (error.response.status === 409) {
           toast("O e-mail inserido já está cadastrado");
