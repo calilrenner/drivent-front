@@ -8,6 +8,7 @@ import {
   FaBed,
   FaCalendarWeek,
   FaCertificate,
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 import NavigationButton from "./NavigationButton";
@@ -18,6 +19,11 @@ export default function NavigationBar() {
 
   function isActive(buttonPath) {
     return location.pathname === buttonPath;
+  }
+
+  function signOut() {
+    localStorage.clear();
+    window.location.reload();
   }
 
   return (
@@ -56,6 +62,11 @@ export default function NavigationBar() {
           <span>Certificado</span>
         </NavigationButton>
       </Link>
+
+      <NavigationButton>
+        <FaSignOutAlt onClick={signOut} />
+        <span onClick={signOut}>Sair</span>
+      </NavigationButton>
     </Container>
   );
 }
