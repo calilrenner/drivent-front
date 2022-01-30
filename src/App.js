@@ -88,7 +88,6 @@ function ensureAuthenticated() {
     {
       to: "/sign-in",
       check: () => !!userData.token,
-      message: "Por favor, faça login!",
     },
   ];
 }

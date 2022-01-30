@@ -33,10 +33,8 @@ export default function SignIn() {
       /* eslint-disable-next-line no-console */
       console.error(error);
       
-      if (error.response) {
-        for (const detail of error.response.data.details) {
-          toast(detail);
-        }
+      if (error.response.status === 401) {
+        toast("E-mail ou senha inválidos!");
       } else {
         toast("Não foi possível conectar ao servidor!");
       }

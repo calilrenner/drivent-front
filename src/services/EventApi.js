@@ -5,7 +5,25 @@ export default class EventApi {
     return api.get("/event");
   }
 
-  getEventsByDay(dayId) {
-    return api.get(`/event/${dayId}`);
+  getEventsByDay(dayId, userId) {
+    return api.get(`/event/${dayId}/${userId}`);
+  }
+
+  postUserEvent({ userId, eventId }) {
+    const body = {
+      userId,
+      eventId,
+    };
+
+    return api.post("/event/schedule", body);
+  }
+
+  updateUserEvent({ userId, eventId }) {
+    const body = {
+      userId,
+      eventId,
+    };
+
+    return api.post("/event/schedule/update", body);
   }
 }

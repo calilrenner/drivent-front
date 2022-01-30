@@ -1,4 +1,7 @@
-import { Link, useLocation, useRouteMatch } from "react-router-dom";
+import { Link, useLocation, useRouteMatch, useHistory } from "react-router-dom";
+import useApi from "../../../hooks/useApi";
+import UserContext from "../../../contexts/UserContext";
+import { useContext } from "react";
 
 import styled from "styled-components";
 
@@ -8,6 +11,7 @@ import {
   FaBed,
   FaCalendarWeek,
   FaCertificate,
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 import NavigationButton from "./NavigationButton";
@@ -15,9 +19,21 @@ import NavigationButton from "./NavigationButton";
 export default function NavigationBar() {
   const location = useLocation();
   const match = useRouteMatch();
+  const api = useApi();
+  const { userData, setUserData } = useContext(UserContext);
+  const history = useHistory();
 
   function isActive(buttonPath) {
     return location.pathname === buttonPath;
+  }
+
+  function signOut() {
+    api.user.signOut(userData.user.id)
+      .then(() => {
+        setUserData({ ...userData, token: "" });
+        localStorage.clear();
+        history.push("/sign-in");
+      });
   }
 
   return (
@@ -56,6 +72,11 @@ export default function NavigationBar() {
           <span>Certificado</span>
         </NavigationButton>
       </Link>
+
+      <NavigationButton>
+        <FaSignOutAlt onClick={signOut} />
+        <span onClick={signOut}>Sair</span>
+      </NavigationButton>
     </Container>
   );
 }

@@ -32,6 +32,8 @@ export default function Activities() {
   const [hasPayment, setHasPayment] = useState(false);
   const [isPresential, setIsPresential] = useState(false);
   const [activities, setActivities] = useState(false);
+  const [updateEvents, setUpdateEvents] = useState(false);
+  const [firstUpdate, setFirstUpdate] = useState(false);
   
   const { userData } = useContext(UserContext);
   const userId = userData.user.id;
@@ -51,12 +53,12 @@ export default function Activities() {
         console.error(error);
         setLoading(false);
       });
-  }, [hasPayment, isPresential]);
+  }, [hasPayment, isPresential, updateEvents]);
 
   const selectDay = (ev) => {
-    const newArray = weekdays.map((d, index) => {
-      if (d.id.toString() === ev.currentTarget.id) {
-        event.getEventsByDay(d.id)
+    const newArray = weekdays.map((d) => {
+      if (d.id.toString() === ev.toString()) {
+        event.getEventsByDay(d.id, userId)
           .then((response) => {
             console.log(response.data);
             setActivities(response.data);
@@ -71,6 +73,13 @@ export default function Activities() {
     });
     setDays(newArray);
   };
+
+  useEffect(() => {
+    if(firstUpdate) {
+      setActivities(false);
+      selectDay(firstUpdate);
+    }
+  }, [updateEvents, firstUpdate]);
   return (
     <>
       <PageTitle>Escolha de atividades</PageTitle>
@@ -85,7 +94,7 @@ export default function Activities() {
                   <Day
                     key={d.id}
                     id={d.id}
-                    onClick={selectDay}
+                    onClick={() => setFirstUpdate(d.id)}
                     selected={d.isSelected}
                   >{d.day}</Day>
                 );
@@ -94,7 +103,7 @@ export default function Activities() {
             {
               activities !== false 
                 ? 
-                <DayTrails dayTrails={activities}/>
+                <DayTrails dayTrails={activities} setUpdateEvents={setUpdateEvents} updateEvents={updateEvents}/>
                 : 
                 <div/>}
           </>
