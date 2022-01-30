@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
-import { useHistory } from "react-router-dom";
 
 import AuthLayout from "../../layouts/Auth";
 
@@ -10,6 +9,7 @@ import { Row, Title, Label } from "../../components/Auth";
 import Link from "../../components/Link";
 
 import EventInfoContext from "../../contexts/EventInfoContext";
+import UserContext from "../../contexts/UserContext";
 
 import useApi from "../../hooks/useApi";
 
@@ -19,11 +19,10 @@ export default function Enroll() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loadingEnroll, setLoadingEnroll] = useState(false);
 
-  const history = useHistory();
-
   const api = useApi();
   
   const { eventInfo } = useContext(EventInfoContext);
+  const { setUserData } = useContext(UserContext);
 
   function submit(event) {
     event.preventDefault();
@@ -31,15 +30,22 @@ export default function Enroll() {
 
     if (password !== confirmPassword) {
       toast("As senhas devem ser iguais!");
+      setLoadingEnroll(false);
     } else {
-      api.user.signUp(email, password).then(response => {
-        toast("Inscrito com sucesso! Por favor, faça login.");
-        history.push("/sign-in");
+      api.user.signUp(email, password).then(async() => {
+        toast("Inscrito com sucesso!");
+        api.auth.signIn(email, password).then(response => {
+          setUserData(response.data);
+        });
       }).catch(error => {
-        if (error.response) {
+        if (error.response.status === 422) {
           for (const detail of error.response.data.details) {
-            toast(detail);
+            // eslint-disable-next-line quotes
+            if (detail === '"password" length must be at least 6 characters long') toast("A senha deve conter no mínimo 6 caracteres");
+            else toast("Insira um formato de e-mail válido");
           }
+        } else if (error.response.status === 409) {
+          toast("O e-mail inserido já está cadastrado");
         } else {
           toast("Não foi possível conectar ao servidor!");
         }
