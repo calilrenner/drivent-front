@@ -100,21 +100,27 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
                   </VacanciesAvailabilityStyle>
                 ): 
                   (<VacanciesAvailabilityStyle
-                    color={updateIcon ? "red" : "#078632"}
+                    color={updateIcon.icon && updateIcon.eventId === event.id ? "red" : "#078632"}
                     isAvailable={true}
                     onClick={() => updateUserEvent(event.id)}
-                    onMouseOver={() => setUpdateIcon(true)}
+                    onMouseOver={(e) => {
+                      setUpdateIcon({ icon: true, eventId: event.id });
+                    }}
                     onMouseOut={() => setUpdateIcon(false)}
                   >
-                    {updateIcon ? <><CancelEventIcon /><div>Cancelar</div></> : (<><ReservedIcon /><div>Inscrito</div></>)}
+                    {updateIcon.icon && updateIcon.eventId === event.id ? <><CancelEventIcon /><div>Cancelar</div></> : (<><ReservedIcon /><div>Inscrito</div></>)}
                   </VacanciesAvailabilityStyle>)
                 ) : (
                   <VacanciesAvailabilityStyle
                     color="#CC6666"
-                    isAvailable={false}
+                    isAvailable={event.reservedByThisUser ? true : false}
+                    onClick={() => updateUserEvent(event.id)}
+                    onMouseOver={(e) => {
+                      setUpdateIcon({ icon: true, eventId: event.id });
+                    }}
+                    onMouseOut={() => setUpdateIcon(false)}
                   >
-                    <UnavailableIcon />
-                    <div>Esgotado</div>
+                    {event.reservedByThisUser ? (updateIcon.icon && updateIcon.eventId === event.id ? (<><CancelEventIcon /><div>Cancelar</div></>) : (<><ReservedIcon /><div>Inscrito</div></>)) : (<><UnavailableIcon /><div>Esgotado</div></>)}
                   </VacanciesAvailabilityStyle>
                 )}
               </VacanciesStyle>

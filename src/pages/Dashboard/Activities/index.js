@@ -76,6 +76,7 @@ export default function Activities() {
 
   useEffect(() => {
     if(firstUpdate) {
+      setActivities(false);
       selectDay(firstUpdate);
     }
   }, [updateEvents, firstUpdate]);
