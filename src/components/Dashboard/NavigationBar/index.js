@@ -1,4 +1,7 @@
-import { Link, useLocation, useRouteMatch } from "react-router-dom";
+import { Link, useLocation, useRouteMatch, useHistory } from "react-router-dom";
+import useApi from "../../../hooks/useApi";
+import UserContext from "../../../contexts/UserContext";
+import { useContext } from "react";
 
 import styled from "styled-components";
 
@@ -16,14 +19,21 @@ import NavigationButton from "./NavigationButton";
 export default function NavigationBar() {
   const location = useLocation();
   const match = useRouteMatch();
+  const api = useApi();
+  const { userData, setUserData } = useContext(UserContext);
+  const history = useHistory();
 
   function isActive(buttonPath) {
     return location.pathname === buttonPath;
   }
 
   function signOut() {
-    localStorage.clear();
-    window.location.reload();
+    api.user.signOut(userData.user.id)
+      .then(() => {
+        setUserData({ ...userData, token: "" });
+        localStorage.clear();
+        history.push("/sign-in");
+      });
   }
 
   return (
