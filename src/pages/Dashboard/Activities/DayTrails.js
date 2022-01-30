@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { BiLogIn, BiCheckCircle } from "react-icons/bi";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { MdCancel } from "react-icons/md";
 import useApi from "../../../hooks/useApi";
 import useLocalStorage from "../../../hooks/useLocalStorage";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import Button from "../../../components/Form/Button";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -37,16 +37,13 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
   const [updateToast, setUpdateToast] = useState(false);
   const [updateComponents, setUpdateComponents] = useState(false);
   const [newUserEvent, setNewUserEvent] = useState({});
+  const [updateIcon, setUpdateIcon] = useState(false);
   const notify = () => toast(({ toastProps }) => {
     toastProps.position = "top-center";
     toastProps.closeOnClick = true;
     return(
       <ConflictContainer>
         <span>{conflictMsg}</span>
-        <OptionsContainer>
-          <ToastButton onClick={() => updateUserEvent(newUserEvent)}>Trocar</ToastButton>
-          <ToastButton>Cancelar</ToastButton>
-        </OptionsContainer>
       </ConflictContainer>
     );}
   );
@@ -103,12 +100,13 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
                   </VacanciesAvailabilityStyle>
                 ): 
                   (<VacanciesAvailabilityStyle
-                    color="#078632"
+                    color={updateIcon ? "red" : "#078632"}
                     isAvailable={true}
                     onClick={() => updateUserEvent(event.id)}
+                    onMouseOver={() => setUpdateIcon(true)}
+                    onMouseOut={() => setUpdateIcon(false)}
                   >
-                    <ReservedIcon />
-                    <div>Inscrito</div>
+                    {updateIcon ? <><CancelEventIcon /><div>Cancelar</div></> : (<><ReservedIcon /><div>Inscrito</div></>)}
                   </VacanciesAvailabilityStyle>)
                 ) : (
                   <VacanciesAvailabilityStyle
@@ -243,18 +241,12 @@ const ConflictContainer = styled.div`
 
 span {
   font-size: 15px;
-  height: 5rem;
+  height: 100%;
   color: red;
 }
 `;
 
-const OptionsContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-`;
-
-const ToastButton = styled.button`
-  width: 100%;
-  height: 2rem;
-  font-weight: bold;
+const CancelEventIcon = styled(MdCancel)`
+  color: red;
+  font-size: 18px;
 `;
