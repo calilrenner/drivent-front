@@ -61,8 +61,10 @@ export default function PersonalInformationForm() {
           for (const detail of error.response.data.details) {
             toast(detail);
           }
+        } else if(error.response.status === 409) {
+          toast.error("Os dados inseridos já estão cadastrados.");
         } else {
-          toast("Não foi possível");
+          toast.error("Não foi possível");
         }
         /* eslint-disable-next-line no-console */
         console.log(error);
