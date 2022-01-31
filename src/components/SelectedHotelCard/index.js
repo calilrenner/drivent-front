@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "../Form/Button";
 
-export default function HotelCard({ alreadySelectedHotel, setAlreadySelectedHotel }) {
+export default function HotelCard({ alreadySelectedHotel, setAlreadySelectedHotel, setSelectedRoomId, setSelectedVacancyId }) {
   let accommodationType;
 
   if(alreadySelectedHotel.roomType === 1) {
@@ -16,6 +16,8 @@ export default function HotelCard({ alreadySelectedHotel, setAlreadySelectedHote
 
   function changeRoom() {
     setAlreadySelectedHotel({});
+    setSelectedRoomId(0);
+    setSelectedVacancyId(0);
   }
 
   return ( 

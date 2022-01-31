@@ -125,7 +125,7 @@ export default function Hotel() {
               ?
               <>
                 <SubtitleStyle>Você já escolheu o seu quarto: </SubtitleStyle>
-                <SelectedHotelCard alreadySelectedHotel={alreadySelectedHotel} setAlreadySelectedHotel={setAlreadySelectedHotel}/>
+                <SelectedHotelCard alreadySelectedHotel={alreadySelectedHotel} setAlreadySelectedHotel={setAlreadySelectedHotel} setSelectedRoomId={setSelectedRoomId} setSelectedVacancyId={setSelectedVacancyId}/>
               </>
               :
               <>
@@ -256,6 +256,9 @@ const RoomCard = styled.div`
   color: #454545;
   background: ${(props) => props.isFull ? "#c6c6c6" : props.isSelected ? "#FFEED2" : "none"};
   cursor: ${(props) => props.isFull ? "not-allowed" : "auto"};
+  :hover {
+    background: ${(props) => props.isFull ? "#c6c6c6" : "#FFEED2"};
+  }
   div {
     display: flex;
   }
@@ -264,6 +267,10 @@ const RoomCard = styled.div`
 const VacancySimbol = styled.div`
   color: ${(props) => props.isSelected ? "#FF7491" : "#000000"};
   cursor: ${(props) => props.isAvailable ? "pointer" : "not-allowed"};
+  font-size: 24px;
+  :hover {
+    color: ${(props) => props.isAvailable ? "#FF7491" : "#000000"};
+  }
 `;
 
 const ButtonStyle = styled(Button)`
