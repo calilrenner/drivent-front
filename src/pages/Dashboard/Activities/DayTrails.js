@@ -111,7 +111,7 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
                   >
                     {updateIcon.icon && updateIcon.eventId === event.id ? <><CancelEventIcon /><div>Cancelar</div></> : (<><ReservedIcon /><div>Inscrito</div></>)}
                   </VacanciesAvailabilityStyle>)
-                ) : (event.closed ? (
+                ) : (event.closed && !event.reservedByThisUser ? (
                   <VacanciesAvailabilityStyle
                     color='rgba(245, 40, 198, 0.8)'
                     isAvailable={false}
