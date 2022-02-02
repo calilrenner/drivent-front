@@ -29,7 +29,7 @@ export default function Enroll() {
     setLoadingEnroll(true);
 
     if (password !== confirmPassword) {
-      toast("As senhas devem ser iguais!");
+      toast.error("As senhas devem ser iguais!");
       setLoadingEnroll(false);
     } else {
       api.user.signUp(email, password).then(async() => {
@@ -41,13 +41,13 @@ export default function Enroll() {
         if (error.response.status === 422) {
           for (const detail of error.response.data.details) {
             // eslint-disable-next-line quotes
-            if (detail === '"password" length must be at least 6 characters long') toast("A senha deve conter no mínimo 6 caracteres");
-            else toast("Insira um formato de e-mail válido");
+            if (detail === '"password" length must be at least 6 characters long') toast.error("A senha deve conter no mínimo 6 caracteres");
+            else toast.error("Insira um formato de e-mail válido");
           }
         } else if (error.response.status === 409) {
-          toast("O e-mail inserido já está cadastrado");
+          toast.error("O e-mail inserido já está cadastrado");
         } else {
-          toast("Não foi possível conectar ao servidor!");
+          toast.error("Não foi possível conectar ao servidor!");
         }
       }).then(() => {
         setLoadingEnroll(false);
