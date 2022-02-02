@@ -114,7 +114,7 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
                   <VacanciesAvailabilityStyle
                     color="#CC6666"
                     isAvailable={event.reservedByThisUser ? true : false}
-                    onClick={() => updateUserEvent(event.id)}
+                    onClick={event.reservedByThisUser ? (() => updateUserEvent(event.id)) : (() => {})}
                     onMouseOver={(e) => {
                       setUpdateIcon({ icon: true, eventId: event.id });
                     }}
