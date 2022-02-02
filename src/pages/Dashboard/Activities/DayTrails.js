@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { BiLogIn, BiCheckCircle } from "react-icons/bi";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { IoLockClosedSharp } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import useApi from "../../../hooks/useApi";
 import useLocalStorage from "../../../hooks/useLocalStorage";
@@ -89,7 +90,7 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
               </EventDescrpiptionStyle>
               <SeparatorStyle />
               <VacanciesStyle>
-                {event.vacancies > 0 ? (!event.reservedByThisUser ? (
+                {event.vacancies > 0 && !event.closed ? (!event.reservedByThisUser ? (
                   <VacanciesAvailabilityStyle
                     color="#078632"
                     isAvailable={true}
@@ -110,6 +111,14 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
                   >
                     {updateIcon.icon && updateIcon.eventId === event.id ? <><CancelEventIcon /><div>Cancelar</div></> : (<><ReservedIcon /><div>Inscrito</div></>)}
                   </VacanciesAvailabilityStyle>)
+                ) : (event.closed ? (
+                  <VacanciesAvailabilityStyle
+                    color='rgba(245, 40, 198, 0.8)'
+                    isAvailable={false}
+                  >
+                    <ClosedEventIcon />
+                    <div>Fechado</div>
+                  </VacanciesAvailabilityStyle>
                 ) : (
                   <VacanciesAvailabilityStyle
                     color="#CC6666"
@@ -122,7 +131,7 @@ function EventTrails({ trailName, events, setUpdateEvents, updateEvents, conflic
                   >
                     {event.reservedByThisUser ? (updateIcon.icon && updateIcon.eventId === event.id ? (<><CancelEventIcon /><div>Cancelar</div></>) : (<><ReservedIcon /><div>Inscrito</div></>)) : (<><UnavailableIcon /><div>Esgotado</div></>)}
                   </VacanciesAvailabilityStyle>
-                )}
+                ))}
               </VacanciesStyle>
             </EventCardStyle>
           );
@@ -254,5 +263,10 @@ span {
 
 const CancelEventIcon = styled(MdCancel)`
   color: red;
+  font-size: 18px;
+`;
+
+const ClosedEventIcon = styled(IoLockClosedSharp)`
+  color: black;
   font-size: 18px;
 `;
