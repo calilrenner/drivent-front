@@ -133,7 +133,7 @@ export default function PaymentInfo({ modalityInfo }) {
         <div>
           <span>Pagamento confirmado!</span>
           <Type>
-            {modalityInfo.modality === "online"
+            {userTicket[0]?.modalityId === 2
               ?
               "Pronto! Aproveite o evento e não se esqueça de baixar o seu certificado"
               :
