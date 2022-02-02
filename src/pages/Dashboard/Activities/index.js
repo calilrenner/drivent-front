@@ -12,17 +12,17 @@ export default function Activities() {
   const weekdays = [
     {
       id: 1,
-      day: "Sexta, 22/10",
+      day: "Quinta, 03/02",
       isSelected: false,
     },
     {
       id: 2,
-      day: "Sábado, 23/10",
+      day: "Sexta, 04/02",
       isSelected: false,
     },
     {
       id: 3,
-      day: "Domingo, 24/10",
+      day: "Sábado, 05/02",
       isSelected: false,
     }
   ];
