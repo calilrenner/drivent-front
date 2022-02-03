@@ -64,8 +64,9 @@ const CertificateStyle = styled.div`
   left: 0;
 
   p {
-    margin-top: 15px;
+    margin-top: 8px;
     text-align: center;
+    line-height: 20px;
   }
 `;
 
