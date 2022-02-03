@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import DateFnsUtils from "@date-io/date-fns";
 import Typography from "@material-ui/core/Typography";
@@ -20,12 +20,15 @@ import { InputWrapper } from "./InputWrapper";
 import { ErrorMsg } from "./ErrorMsg";
 import { ufList } from "./ufList";
 import FormValidations from "./FormValidations";
+import UserContext from "../../contexts/UserContext";
 
 dayjs.extend(CustomParseFormat);
 
 export default function PersonalInformationForm() {
   const [dynamicInputIsLoading, setDynamicInputIsLoading] = useState(false);
   const { enrollment, cep } = useApi();
+  
+  const { setUserInfo } = useContext(UserContext);
 
   const {
     handleSubmit,
@@ -69,6 +72,8 @@ export default function PersonalInformationForm() {
         /* eslint-disable-next-line no-console */
         console.log(error);
       });
+
+      setUserInfo({ name: data.name });
     },
 
     initialValues: {

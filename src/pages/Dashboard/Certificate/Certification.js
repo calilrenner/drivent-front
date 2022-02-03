@@ -1,14 +1,36 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import useApi from "../../../hooks/useApi";
 
 export default function Certification() {
+  const { enrollment } = useApi();
+  const [ userName, setUserName ] = useState("Usuário");
+
+  useEffect(() => {
+    enrollment.getPersonalInformations().then(response => {
+      if (response.status !== 200) {
+        return;
+      }
+      const { name } = response.data;
+      setUserName(name);
+    });
+  }, []);
+
   return (
     <CertificateContainerStyle>
       <img src="https://yt3.ggpht.com/oZCGpPQc5qat2YIzVs_h1LTvrtpV6G--Q2CopkOoAa7d1WvHDohPzWO-vSEnQ4GljcQOO_6QkQ=s900-c-k-c0x00ffffff-no-rj" alt="d-background"/>
       <CertificateStyle>
         <LogoStyle>Driven.t</LogoStyle>
         <TitleStyle>CERTIFICADO DE PARTICIPAÇÃO</TitleStyle>
-        <p>Certificamos que</p>
-        <NameStyle>PARTICIPANTE PARTICIPANDO</NameStyle>
+        <TextContainerStyle>
+          <p>Certificamos que</p>
+          <NameStyle>{ userName }</NameStyle>
+          <p>participou do evento <strong>Imersão em Literatura Fantástica</strong>, com carga horária de 30h.</p>
+          <SigningAreaStyle>
+            <img src="https://cdn131.picsart.com/324796905087211.png?type=webp&to=min&r=640" alt="Dumbledore-signature"/>
+            <SignatureStyle>Minerva McGonagall</SignatureStyle>
+          </SigningAreaStyle>
+        </TextContainerStyle>
       </CertificateStyle>
     </CertificateContainerStyle>
   );
@@ -16,6 +38,7 @@ export default function Certification() {
 
 const CertificateContainerStyle = styled.section`
   width: 100%;
+  max-width: 700px;
   height: 60%;
   display: flex;
   justify-content: center;
@@ -65,8 +88,36 @@ const TitleStyle = styled.h2`
   color: #343434;
 `;
 
+const TextContainerStyle = styled.div`
+  width: 90%;
+  max-width: 350px;
+`;
+
 const NameStyle = styled.p`
   font-weight: 700;
   font-style: italic;
   border-bottom: 1px solid black;
+`;
+
+const SigningAreaStyle = styled.div`
+  display: flex;
+  justify-content: right;
+  align-items: flex-end;
+  position: relative;
+  margin-top: 40px;
+  height: 65px;
+
+  img{
+    width: 170px;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+  }
+`;
+
+const SignatureStyle = styled.div`
+  width: 60%;
+  text-align: end;
+  padding: 5px 10px;
+  border-top: 1px solid black;
 `;
