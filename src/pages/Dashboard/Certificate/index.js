@@ -15,6 +15,7 @@ export default function Certificate() {
 
   const [hasPayment, setHasPayment] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [modality, setModality] = useState("");
 
   function checkPayment(userId) {
     setLoading(true);
@@ -22,6 +23,7 @@ export default function Certificate() {
       .then((response) => {
         if (response.status === 200) {
           setHasPayment(true);
+          setModality(response.data[0].modality.type);
           setLoading(false);
         }
       })
@@ -48,7 +50,7 @@ export default function Certificate() {
           ?
           <>
             <CertificateContainerStyle ref={ref}>
-              <Certification />
+              <Certification modality={modality}/>
             </CertificateContainerStyle>
             <Pdf targetRef={ref} filename="Certificate.pdf" options={options}>
               {({ toPdf }) =>

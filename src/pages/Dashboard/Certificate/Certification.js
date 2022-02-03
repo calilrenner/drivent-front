@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useApi from "../../../hooks/useApi";
 
-export default function Certification() {
+export default function Certification({ modality }) {
   const { enrollment } = useApi();
   const [ userName, setUserName ] = useState("Usuário");
 
@@ -25,7 +25,7 @@ export default function Certification() {
         <TextContainerStyle>
           <p>Certificamos que</p>
           <NameStyle>{ userName }</NameStyle>
-          <p>participou do evento <strong>Imersão em Literatura Fantástica</strong>, com carga horária de 30h.</p>
+          <p>participou do evento <strong>Imersão em Literatura Fantástica</strong>, na modalidade <strong>{modality}</strong>, com carga horária de 30h.</p>
           <SigningAreaStyle>
             <img src="https://cdn131.picsart.com/324796905087211.png?type=webp&to=min&r=640" alt="Dumbledore-signature"/>
             <SignatureStyle>Minerva McGonagall</SignatureStyle>
