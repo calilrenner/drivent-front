@@ -132,7 +132,14 @@ export default function PaymentInfo({ modalityInfo }) {
         <Check />
         <div>
           <span>Pagamento confirmado!</span>
-          <Type>Prossiga para escolha de hospedagem e atividades</Type>
+          <Type>
+            {userTicket[0]?.modalityId === 2
+              ?
+              "Pronto! Aproveite o evento e não se esqueça de baixar o seu certificado"
+              :
+              "Prossiga para escolha de hospedagem e atividades"
+            }
+          </Type>
         </div>
       </PaymentCheckContainer>
     </>

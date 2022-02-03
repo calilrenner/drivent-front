@@ -34,9 +34,9 @@ export default function SignIn() {
       console.error(error);
       
       if (error.response.status === 401) {
-        toast("E-mail ou senha inválidos!");
+        toast.error("E-mail ou senha inválidos!");
       } else {
-        toast("Não foi possível conectar ao servidor!");
+        toast.error("Não foi possível conectar ao servidor!");
       }
     }).then(() => {
       setLoadingSignIn(false);

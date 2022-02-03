@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from "react";
+/* eslint-disable quotes */
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import DateFnsUtils from "@date-io/date-fns";
 import Typography from "@material-ui/core/Typography";
@@ -62,7 +63,16 @@ export default function PersonalInformationForm() {
       }).catch((error) => {
         if (error.response?.data?.details) {
           for (const detail of error.response.data.details) {
-            toast(detail);
+            const errorDetails = detail.split(" ");
+            if (errorDetails.includes('"name"')) {
+              toast.error("O nome deve conter ao menos 3 caracteres");
+            } else if (errorDetails.includes("match")) {
+              toast.error("Formato inválido para número de telefone");
+            } else if (errorDetails.includes('"phone"')) {
+              toast.error("O telefone deve conter no mínimo 14 caracteres");
+            } else {
+              toast.error(detail);
+            }
           }
         } else if(error.response.status === 409) {
           toast.error("Os dados inseridos já estão cadastrados.");
