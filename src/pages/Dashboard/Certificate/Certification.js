@@ -38,7 +38,7 @@ export default function Certification() {
 
 const CertificateContainerStyle = styled.section`
   width: 100%;
-  max-width: 790px;
+  max-width: 750px;
   height: 60%;
   display: flex;
   justify-content: center;
