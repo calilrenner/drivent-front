@@ -1,9 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { createRef, useContext, useEffect, useState } from "react";
+import styled from "styled-components";
 import { BlockedText, Center, PageTitle } from "../../../components/DefaultTabStyle";
 import Loading from "../../../components/Loading";
 import UserContext from "../../../contexts/UserContext";
 import useApi from "../../../hooks/useApi";
 import Certification from "./Certification";
+import Pdf from "react-to-pdf";
+import Button from "../../../components/Form/Button";
 
 export default function Certificate() {
   const { payment } = useApi();
@@ -32,13 +35,29 @@ export default function Certificate() {
     checkPayment(userId);
   }, []);
 
+  const ref = createRef();
+  const options = {
+    orientation: "portrait",
+  };
+
   return (
     <>
       <PageTitle>Certificado</PageTitle>
       {
         hasPayment
           ?
-          <Certification/>
+          <>
+            <CertificateContainerStyle ref={ref}>
+              <Certification />
+            </CertificateContainerStyle>
+            <Pdf targetRef={ref} filename="Certificate.pdf" options={options}>
+              {({ toPdf }) =>
+                <ButtonStyle onClick={toPdf}>
+                    Baixar PDF
+                </ButtonStyle>
+              }
+            </Pdf>
+          </>
           :
           <Center>
             {loading ? <Loading /> : <BlockedText>Você precisa participar do evento para obter um certificado</BlockedText>}
@@ -47,3 +66,11 @@ export default function Certificate() {
     </>
   );
 }
+
+const CertificateContainerStyle = styled.section`
+  margin-bottom: 10px;
+`;
+
+const ButtonStyle = styled(Button)`
+  margin-left: 100px;
+`;
